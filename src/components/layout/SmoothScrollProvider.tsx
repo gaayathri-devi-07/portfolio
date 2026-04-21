@@ -39,14 +39,15 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
       root
       autoRaf={false} // GSAP ticker drives the raf — disabling autoRaf prevents double-tick
       options={{
-        lerp: 0.1,
+        lerp: 0.05,
         duration: 1.2,
         smoothWheel: true,
-        wheelMultiplier: 0.85,
+        wheelMultiplier: 0.8,
         touchMultiplier: 1.5,
       }}
     >
       <ScrollTriggerBridge />
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {children as any}
     </ReactLenis>
   )

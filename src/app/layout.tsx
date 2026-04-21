@@ -29,6 +29,7 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["300", "400", "500", "700"],
 });
 
+
 export const metadata: Metadata = {
   title: "Gaayathri Devi — Full-Stack Developer & 3D Artist",
   description:
@@ -55,6 +56,8 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { AudioProvider } from "@/components/providers/AudioProvider";
 import Navbar from "@/components/layout/Navbar";
 import { SmoothScrollProvider } from "@/components/layout/SmoothScrollProvider";
+import GlobalScrollTracker from "@/components/layout/GlobalScrollTracker";
+import GrainOverlay from "@/components/ui/GrainOverlay";
 
 export default function RootLayout({
   children,
@@ -67,10 +70,15 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${bebasNeue.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500">
+      <body 
+        className="min-h-full flex flex-col bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500"
+        suppressHydrationWarning
+      >
         <ThemeProvider attribute="class" defaultTheme="dark">
           <AudioProvider>
             <SmoothScrollProvider>
+              <GlobalScrollTracker />
+              <GrainOverlay />
               <Navbar />
               {children}
             </SmoothScrollProvider>

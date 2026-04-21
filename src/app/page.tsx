@@ -7,7 +7,7 @@ import ContactSection from "@/components/sections/ContactSection";
 
 export default function Home() {
   return (
-    <main suppressHydrationWarning className="min-h-screen overflow-x-hidden flex flex-col bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500">
+    <main suppressHydrationWarning className="min-h-screen flex flex-col bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500">
       <HeroSection />
       <PhilosophySection />
       <ProjectsSection />

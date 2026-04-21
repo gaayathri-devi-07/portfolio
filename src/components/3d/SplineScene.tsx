@@ -1,17 +1,22 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useRef, useCallback, useEffect, type ComponentProps } from 'react'
+import { useRef, useCallback } from 'react'
 
 if (typeof window !== 'undefined') {
   const originalWarn = console.warn;
-  console.warn = (...args: any[]) => {
-    // Join all arguments to properly evaluate in case ThreeJS splits the WebGL log across multiple args
+  console.warn = (...args: unknown[]) => {
     const msg = args.map(arg => String(arg)).join(' '); 
-    if (msg.includes('THREE.WebGLProgram') || msg.includes('forcing loop to unroll') || msg.includes('X3557')) {
+    if (
+      msg.includes('THREE.WebGLProgram') || 
+      msg.includes('forcing loop to unroll') || 
+      msg.includes('X3557') || 
+      msg.includes('non-static position') ||
+      msg.includes('scroll offset')
+    ) {
       return;
     }
-    originalWarn.apply(console, args);
+    originalWarn.apply(console, args as unknown[]);
   };
 }
 
@@ -25,12 +30,12 @@ const Spline = dynamic(() => import('@splinetool/react-spline'), {
 interface SplineSceneProps {
   scene: string
   className?: string
-  onLoad?: (splineApp: any) => void
+  onLoad?: (splineApp: unknown) => void
 }
 
 function SplineLoader() {
   return (
-    <div className="w-full h-full flex items-center justify-center">
+    <div className="relative w-full h-full flex items-center justify-center">
       <div className="flex flex-col items-center gap-5">
         {/* Minimal concentric ring spinner */}
         <div className="relative w-12 h-12">
@@ -67,10 +72,10 @@ function SplineLoader() {
 }
 
 export default function SplineScene({ scene, className = '', onLoad }: SplineSceneProps) {
-  const splineRef = useRef<any>(null)
+  const splineRef = useRef<unknown>(null)
 
   const handleLoad = useCallback(
-    (splineApp: any) => {
+    (splineApp: unknown) => {
       splineRef.current = splineApp
       onLoad?.(splineApp)
     },
@@ -78,7 +83,10 @@ export default function SplineScene({ scene, className = '', onLoad }: SplineSce
   )
 
   return (
-    <div className={`spline-container w-full h-full ${className}`}>
+    <div 
+      className={`spline-container relative w-full h-full ${className}`}
+      style={{ position: 'relative' }}
+    >
       <Spline scene={scene} onLoad={handleLoad} />
     </div>
   )

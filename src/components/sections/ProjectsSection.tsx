@@ -1,27 +1,43 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { motion, useMotionValue, useSpring, useScroll, useTransform } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SERIF = "Playfair Display, Georgia, serif";
+const CERIF = "Canela, Playfair Display, Georgia, serif";
 
 function SpiderReveal({ text, className }: { text: string; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!ref.current) return;
     const words = ref.current.querySelectorAll(".sr-word");
     gsap.from(words, {
-      scrollTrigger: { trigger: ref.current, start: "top 75%" },
-      y: "110%", opacity: 0, rotationZ: 5,
-      duration: 1.2, ease: "expo.out", stagger: 0.05,
+      scrollTrigger: { 
+        trigger: ref.current, 
+        start: "top 80%",
+        toggleActions: "play reverse play reverse"
+      },
+      y: "100%",
+      opacity: 0,
+      rotate: 15,
+      duration: 1.4,
+      ease: "expo.out",
+      stagger: 0.02,
     });
   }, []);
+
   return (
-    <div ref={ref} className={`flex flex-wrap gap-x-4 gap-y-1 ${className ?? ""}`} style={{ fontFamily: SERIF }}>
+    <div
+      ref={ref}
+      className={`flex flex-wrap gap-x-4 gap-y-1 ${className ?? ""}`}
+      style={{ fontFamily: CERIF }}
+    >
       {text.split(" ").map((w, i) => (
         <span key={i} className="overflow-hidden inline-block py-1">
           <span className="sr-word inline-block">{w}</span>
@@ -32,134 +48,126 @@ function SpiderReveal({ text, className }: { text: string; className?: string })
 }
 
 export default function ProjectsSection() {
-  const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 150, damping: 15, mass: 0.5 });
+  const springY = useSpring(mouseY, { stiffness: 150, damping: 15, mass: 0.5 });
 
+  // SCROLL-TRACKING 3D ROTATION
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  // THE FIX: Forcibly clear hover state on scroll to prevent stuck previews
   useEffect(() => {
-    if (!cardRef.current) return;
-    gsap.from(cardRef.current, {
-      scale: 0.8,
-      opacity: 0,
-      y: 100,
-      ease: "back.out(1.7)",
-      duration: 1,
-      scrollTrigger: { trigger: cardRef.current, start: "top 80%" },
-    });
+    const handleScroll = () => setIsHovered(false);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Enters showing the back (-180), lays PERFECTLY FLAT to read in the center (0), flips to the back as it leaves (180). Total rotation = 360 degrees.
+  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [-180, 0, 180]);
+  // Scales down slightly while flipping to add depth and prevent screen clipping, full size in the center
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+
+  function handleMouseMove(e: React.MouseEvent) {
+    mouseX.set(e.clientX);
+    mouseY.set(e.clientY);
+  }
+
   return (
-    <section className="relative w-full min-h-screen flex flex-col items-center justify-center py-32 px-8 md:px-16 lg:px-24 overflow-hidden bg-[var(--bg)] transition-colors duration-500">
-      {/* Stars background */}
-      <div className="star-field absolute inset-0 z-0 pointer-events-none" />
+    <>
+      <section 
+        ref={sectionRef}
+        className="relative w-full min-h-screen flex flex-col justify-center items-center pt-[10vh] pb-[20vh] bg-[var(--bg)] transition-colors duration-500 overflow-hidden" 
+      >
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center">
+          
+          {/* TITLE — Spider Reveal */}
+          <SpiderReveal
+            text="MY PROJECTS"
+            className="text-6xl md:text-8xl font-bold uppercase tracking-tighter text-center relative z-20 w-full justify-center text-[var(--fg)] opacity-80 mb-[15vh]"
+          />
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center gap-16">
-
-        {/* Section heading */}
-        <SpiderReveal
-          text="MY PROJECTS"
-          className="text-5xl md:text-8xl font-medium text-[var(--fg)] w-full justify-center text-center"
-        />
-
-        {/* Single centered premium card */}
-        <div ref={cardRef} className="w-full max-w-2xl" style={{ perspective: "1200px" }}>
-          <Link href="https://blackbox-interview.vercel.app" target="_blank" className="block group">
-            <div
-              className="relative w-full rounded-3xl overflow-hidden shadow-2xl"
-              style={{
-                background: "var(--glass)",
-                backdropFilter: "blur(24px) saturate(1.6)",
-                WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-                border: "1px solid var(--glass-border)",
-                minHeight: "480px",
-              }}
-            >
-              {/* Glow accent top edge */}
-              <div
-                className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px"
-                style={{ background: "linear-gradient(90deg, transparent, var(--accent), transparent)" }}
-              />
-
-              {/* Card content */}
-              <div className="relative z-10 flex flex-col h-full justify-between p-10" style={{ fontFamily: SERIF, minHeight: "480px" }}>
-                <div className="flex flex-col gap-6">
-                  <span className="text-[var(--accent)] font-mono text-xs tracking-widest uppercase">
-                    Featured Project · 01
-                  </span>
-                  <div>
-                    <h3 className="text-4xl md:text-5xl font-medium text-[var(--fg)] leading-tight mb-4">
-                      Black Box<br />AI Interview App
-                    </h3>
-                    <p className="text-[var(--muted)] text-base leading-relaxed max-w-md">
-                      Full-stack AI-powered interview platform with real-time voice interaction,
-                      intelligent feedback loops, and dynamic question generation.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mt-8">
-                  {["Next.js 16", "FastAPI", "Google Gemini", "Firebase", "Three.js"].map(tag => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 rounded-full font-mono text-xs tracking-wide border"
-                      style={{
-                        background: "rgba(212,165,116,0.08)",
-                        borderColor: "rgba(212,165,116,0.25)",
-                        color: "var(--accent)",
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                <span className="mt-6 text-xs font-mono tracking-widest text-[var(--muted)] uppercase">
-                  Hover to preview →
-                </span>
-              </div>
-
-              {/* Hover overlay — slides up from bottom */}
-              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"
-                style={{ background: "rgba(0,0,0,0.82)", backdropFilter: "blur(8px)" }}
-              >
-                <div
-                  className="w-[75%] h-[55%] rounded-2xl overflow-hidden flex items-center justify-center"
-                  style={{
-                    background: "rgba(30,30,30,0.9)",
-                    border: "1px solid var(--glass-border)",
-                    boxShadow: "0 0 60px rgba(212,165,116,0.15)",
-                  }}
+          <motion.div 
+            style={{ rotateX, scale, transformPerspective: 2000 }}
+            className="relative w-full max-w-6xl mx-auto rounded-3xl p-[4px] overflow-hidden group shadow-[0_0_80px_rgba(232,121,249,0.3)] dark:shadow-[0_0_80px_rgba(232,121,249,0.4)]"
+          >
+              {/* THE TRACING LIGHT BEAM: Adaptive Conic Glow */}
+              <div className="absolute inset-[-100%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,rgba(0,0,0,0)_0%,rgba(0,0,0,0)_20%,#e879f9_35%,#f472b6_50%,#e879f9_65%,rgba(0,0,0,0)_80%,rgba(0,0,0,0)_100%)] opacity-50 dark:opacity-100" />
+              
+              {/* THE INNER CARD: Now forced to a cinematic full-page height */}
+              <Link href="https://blackbox-interview.vercel.app" target="_blank" className="relative block h-full w-full z-10 cursor-none">
+                <div 
+                  onMouseMove={handleMouseMove}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  className="relative w-full min-h-[80vh] bg-white/60 dark:bg-[#0a0a0a] backdrop-blur-2xl border border-gray-200/50 dark:border-gray-800 rounded-[calc(1.5rem-4px)] flex flex-col p-12 md:p-20 lg:p-24 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-none transition-colors duration-500" 
+                  style={{ fontFamily: CERIF }}
                 >
-                  <div className="flex flex-col items-center gap-3">
-                    {/* Animated loading bar */}
-                    <div className="w-32 h-0.5 rounded-full overflow-hidden bg-neutral-200 dark:bg-white/10">
-                      <div
-                        className="h-full rounded-full"
-                        style={{
-                          background: "linear-gradient(90deg, var(--accent), var(--accent-hover))",
-                          animation: "loading-bar 1.5s ease-in-out infinite",
-                          width: "60%",
-                        }}
-                      />
+                    {/* --- CONTENT WRAPPER (Pushes tech stack down) --- */}
+                    <div className="flex-grow flex flex-col items-center justify-center">
+                        <span className="text-sm tracking-[0.3em] uppercase text-gray-500 dark:opacity-50 font-bold mb-6">
+                            FEATURED PROJECT • 01
+                        </span>
+                        
+                        <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-8 text-gray-900 dark:text-white">
+                            Black Box <br/> AI Interview App
+                        </h3>
+                        
+                        <p className="text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-12">
+                            While countless platforms teach coding, there is a massive gap in solutions that simulate the intense pressure of a real technical interview. Blackbox AI bridges this gap by providing an immersive, real-time mock interview environment tailored to specific target companies and difficulty levels. It is designed to give candidates firsthand experience, helping them conquer interview anxiety and perform with absolute confidence.
+                        </p>
                     </div>
-                    <span className="text-white/60 font-mono text-xs tracking-widest uppercase">
-                      Loading Preview...
-                    </span>
-                  </div>
-                </div>
-                <p className="mt-4 text-white/40 font-mono text-xs tracking-widest">
-                  Click to open project →
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-      </div>
 
-      <style jsx>{`
-        @keyframes loading-bar {
-          0%   { transform: translateX(-100%); }
-          100% { transform: translateX(300%); }
-        }
-      `}</style>
-    </section>
+                    {/* --- TECH STACK (Forced to the bottom via mt-auto) --- */}
+                    <div className="mt-auto pt-10 border-t border-white/10 w-full flex flex-wrap justify-center gap-6 md:gap-12">
+                        <div className="flex flex-col items-center">
+                            <p className="text-[#d8b4fe] font-mono text-[10px] uppercase tracking-widest mb-2 font-bold">Frontend</p>
+                            <p className="text-sm text-gray-900 font-mono dark:opacity-90">Next.js 16 • React 19 • TS</p>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <p className="text-[#d8b4fe] font-mono text-[10px] uppercase tracking-widest mb-2 font-bold">Backend</p>
+                            <p className="text-sm text-gray-900 font-mono dark:opacity-90">Python • FastAPI • Uvicorn</p>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <p className="text-[#d8b4fe] font-mono text-[10px] uppercase tracking-widest mb-2 font-bold">Database</p>
+                            <p className="text-sm text-gray-900 font-mono dark:opacity-90">Firebase</p>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <p className="text-purple-600 dark:text-[#d8b4fe] font-mono text-[10px] uppercase tracking-widest mb-2 font-bold">AI Engine</p>
+                            <p className="text-sm text-gray-900 font-mono dark:text-white/90">Gemini 2.5 Flash</p>
+                        </div>
+                    </div>
+                </div>
+              </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* FLOATING PREVIEW — Strictly over card */}
+      <motion.div
+        className="fixed top-0 left-0 w-80 h-52 rounded-2xl overflow-hidden pointer-events-none z-[100] shadow-2xl border border-gray-900/10 dark:border-white/20"
+        style={{ x: springX, y: springY, translateX: "-50%", translateY: "-50%" }}
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ 
+          opacity: isHovered ? 1 : 0, 
+          scale: isHovered ? 1 : 0.5 
+        }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <video 
+          src="/preview.mp4" 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className="w-full h-full object-cover"
+        />
+      </motion.div>
+    </>
   );
 }

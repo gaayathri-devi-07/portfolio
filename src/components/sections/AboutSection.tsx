@@ -21,6 +21,7 @@ export default function AboutSection() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top 60%",
+        toggleActions: "play reverse play reverse"
       },
       y: '0%',
       rotationZ: 0,

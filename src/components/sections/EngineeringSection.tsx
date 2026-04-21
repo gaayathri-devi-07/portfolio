@@ -30,7 +30,7 @@ export default function EngineeringSection() {
             </div>
             <h3 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white mb-4">High-Performance WebGL</h3>
             <p className="text-neutral-600 dark:text-neutral-400 font-light leading-relaxed text-lg">
-              Architectured the <strong className="text-neutral-900 dark:text-white font-medium">"Lucid Void"</strong> project, pushing browser limits to render over <strong className="text-neutral-900 dark:text-white">60,000+ physics particles</strong> flawlessly at a stable 60fps.
+              Architectured the <strong className="text-neutral-900 dark:text-white font-medium">&quot;Lucid Void&quot;</strong> project, pushing browser limits to render over <strong className="text-neutral-900 dark:text-white">60,000+ physics particles</strong> flawlessly at a stable 60fps.
             </p>
           </div>
 
@@ -43,7 +43,7 @@ export default function EngineeringSection() {
             </div>
             <h3 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white mb-4">Product Architecture</h3>
             <p className="text-neutral-600 dark:text-neutral-400 font-light leading-relaxed text-lg">
-              Led system design and full-stack implementation for the <strong className="text-neutral-900 dark:text-white font-medium">"AI Study Planner"</strong>. Organized complex relational databases and optimized API routing for seamless UX.
+              Led system design and full-stack implementation for the <strong className="text-neutral-900 dark:text-white font-medium">&quot;AI Study Planner&quot;</strong>. Organized complex relational databases and optimized API routing for seamless UX.
             </p>
           </div>
 

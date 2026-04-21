@@ -24,7 +24,6 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false)
   const audioContextRef = useRef<AudioContext | null>(null)
   const rainNodeRef = useRef<AudioBufferSourceNode | null>(null)
-  const gainRef = useRef<GainNode | null>(null)
   const keyboardIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const createRainNoise = useCallback((ctx: AudioContext) => {

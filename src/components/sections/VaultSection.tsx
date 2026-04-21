@@ -47,6 +47,7 @@ export default function VaultSection() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top 80%",
+          toggleActions: "play reverse play reverse"
         }
       }
     );
