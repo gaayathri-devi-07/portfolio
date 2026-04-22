@@ -63,7 +63,7 @@ function SpiderReveal({ text, className }: { text: string; className?: string })
     gsap.from(words, {
       scrollTrigger: { 
         trigger: ref.current, 
-        start: "top 80%",
+        start: "top 95%",
         toggleActions: "play reverse play reverse"
       },
       y: "100%", rotate: 15, opacity: 0,
@@ -71,7 +71,7 @@ function SpiderReveal({ text, className }: { text: string; className?: string })
     });
   }, []);
   return (
-    <div ref={ref} className={`flex flex-wrap gap-x-4 gap-y-1 ${className ?? ""}`} style={{ fontFamily: CHRONIC }}>
+    <div ref={ref} className={`flex flex-wrap justify-center gap-x-4 gap-y-1 ${className ?? ""}`} style={{ fontFamily: CHRONIC }}>
       {text.split(" ").map((w, i) => (
         <span key={i} className="overflow-hidden inline-block py-1">
           <span className="sr-word inline-block">{w}</span>
@@ -94,28 +94,24 @@ export default function TechStackSection() {
 
   return (
     <>
-      {/* THE INVISIBLE WALL: Unbreakable spacing after sticky Experience stack */}
-      <div className="w-full h-[50vh] pointer-events-none" />
+      {/* THE INVISIBLE WALL: Reduced spacing to pull section higher */}
+      <div className="w-full h-[20vh] pointer-events-none" />
 
       <section
+        id="skills"
         ref={sectionRef}
-        className="relative w-full h-[150vh] bg-transparent mt-[15vh] pt-[5vh] transition-colors duration-500 overflow-hidden"
+        className="relative z-40 w-full min-h-[130vh] flex flex-col items-center pt-0 pb-[80vh] transition-colors duration-500 overflow-hidden bg-[#000000] transform-gpu will-change-transform"
       >
-        {/* GLOBAL CONTAINER LOCK */}
-        <div className="w-[90%] max-w-[1400px] mx-auto flex flex-col items-center">
-          
-          {/* HEADER — Massively Spaced Title (mb-32) */}
-          <div className="relative z-[20] mb-32 w-full flex justify-center">
-            <SpiderReveal
-              text="SKILLS"
-              className="text-6xl md:text-8xl font-bold uppercase tracking-tighter text-center text-gray-900 dark:text-white opacity-90"
-            />
-          </div>
+        {/* 2. The Title Wrapper - Brute force negative margin for absolute peak placement */}
+        <div className="relative z-50 text-center w-full mb-40 md:mb-52 -mt-56">
+          <SpiderReveal
+            text="SKILLS"
+            className="text-6xl md:text-8xl font-bold uppercase tracking-tighter text-center text-[#ffffff] opacity-90"
+          />
+        </div>
 
-          {/* 3D SCENE CONTAINER (Hybrid Depth Stage) - PERFECT CENTERING */}
-          <div
-            className="relative w-full max-w-7xl mx-auto h-[600px] flex justify-center items-center [perspective:1200px] z-20"
-          >
+        {/* 3. The 3D Rotating Stack: Calibrated height lift */}
+        <div className="relative w-full max-w-[1400px] mx-auto flex-1 flex justify-center items-center px-4 transform-gpu translate-y-32 z-10 [perspective:1200px]">
             {/* HYBRID STAGE: Dark backdrop to preserve 3D lighting in Light Mode */}
             <div className="absolute inset-x-[-10vw] inset-y-[-5vh] bg-black/10 dark:bg-transparent rounded-full blur-3xl pointer-events-none" />
             
@@ -158,17 +154,17 @@ export default function TechStackSection() {
                       ease: [0.25, 0.1, 0.25, 1], // Premium custom bezier curve for ultra-smooth gliding
                       duration: 0.8 
                     }}
-                    className="absolute w-[300px] md:w-[350px] h-[480px] bg-white/50 dark:bg-white/[0.02] backdrop-blur-3xl border-[2px] border-white/60 dark:border-pink-200/20 rounded-[2rem] p-8 flex flex-col shadow-[0_10px_40px_rgba(0,0,0,0.08)] dark:shadow-[inset_0_0_20px_rgba(255,255,255,0.02)]"
+                    className="absolute w-[300px] md:w-[350px] h-[480px] bg-[#0a0a0a]/80 backdrop-blur-3xl border-[2px] border-white/5 rounded-[2rem] p-8 flex flex-col shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
                     style={{
                       fontFamily: CHRONIC,
                     }}
                   >
                     {/* TOP SECTION: Pastel Title & Definition */}
                     <div className="flex flex-col items-center gap-3 mb-6">
-                      <h3 className="text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-br from-pink-600 to-purple-700 dark:from-pink-200 dark:to-purple-300 text-center uppercase">
+                      <h3 className="text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-br from-pink-200 to-purple-300 text-center uppercase">
                         {category.title}
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-[11px] md:text-xs text-center font-mono leading-relaxed px-2">
+                      <p className="text-gray-400 text-[11px] md:text-xs text-center font-mono leading-relaxed px-2">
                         {category.description}
                       </p>
                       {/* Subtle divider line */}
@@ -184,10 +180,10 @@ export default function TechStackSection() {
                             className="flex flex-col items-center gap-3 w-full group"
                           >
                             {/* Glass Icon Container */}
-                            <div className="w-14 h-14 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center shadow-lg group-hover:bg-gradient-to-br group-hover:from-pink-500/20 group-hover:to-purple-500/20 group-hover:border-pink-300/50 transition-all duration-300">
-                              <tech.icon className="text-4xl text-pink-600 dark:text-pink-200 drop-shadow-[0_0_12px_rgba(236,72,153,0.4)] dark:drop-shadow-[0_0_12px_rgba(251,207,232,0.4)] group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-all duration-300" />
+                            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg group-hover:bg-gradient-to-br group-hover:from-pink-500/20 group-hover:to-purple-500/20 group-hover:border-pink-300/50 transition-all duration-300">
+                              <tech.icon className="text-4xl text-pink-200 drop-shadow-[0_0_12px_rgba(251,207,232,0.4)] group-hover:text-purple-300 transition-all duration-300" />
                             </div>
-                            <span className="text-[10px] text-gray-900/70 dark:text-pink-100/70 font-mono text-center tracking-widest uppercase group-hover:text-purple-600 dark:group-hover:text-purple-200 transition-colors duration-300">
+                            <span className="text-[10px] text-pink-100/70 font-mono text-center tracking-widest uppercase group-hover:text-purple-200 transition-colors duration-300">
                               {tech.name}
                             </span>
                           </div>
@@ -198,7 +194,6 @@ export default function TechStackSection() {
                 );
               })}
             </div>
-          </div>
         </div>
 
         {/* Global Ambient Depth Overlay */}
@@ -209,6 +204,9 @@ export default function TechStackSection() {
             opacity: 0.1,
           }}
         />
+
+        {/* THE HARD SPACER: This guarantees a massive gap before the Contact page starts */}
+        <div className="w-full h-[15vh] md:h-[25vh] lg:h-[30vh] shrink-0 pointer-events-none" aria-hidden="true" />
       </section>
     </>
   );

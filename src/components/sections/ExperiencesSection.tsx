@@ -32,7 +32,7 @@ function SpiderReveal({ text, className }: { text: string; className?: string })
   return (
     <div
       ref={ref}
-      className={`flex flex-wrap gap-x-2 gap-y-1 ${className ?? ""}`}
+      className={`flex flex-wrap justify-center gap-x-2 gap-y-1 ${className ?? ""}`}
     >
       {text.split(" ").map((w, i) => (
         <span key={i} className="overflow-hidden inline-block py-1">
@@ -50,7 +50,7 @@ const experiences = [
     date: "2025",
     desc: "Engineered scalable relational database structures and optimized SQL query performance for internal platforms. Designed efficient table relationships to streamline data management, significantly improving retrieval latency and ensuring robust backend data integrity.",
     award: null,
-    certificateUrl: "/certificates/Respro.pdf",
+    certificateUrl: "/certificates/respro.pdf",
   },
   {
     company: "Missile Man Scientific & Research Publications (MMSR)",
@@ -86,56 +86,67 @@ function ExperienceCard({ exp, index, setActiveDate }: { exp: any, index: number
       className="sticky w-full flex justify-center items-center mb-[20vh] z-10"
       style={{ top: `calc(15vh + ${index * 40}px)` }}
     >
-      {/* Hover Wrapper (Moves slightly on hover) */}
-      <motion.div 
-        initial={{ opacity: 0, y: 100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        viewport={{ once: true, margin: "-10%" }}
-        className="relative w-[90vw] max-w-6xl mx-auto rounded-3xl p-[3px] group transition-transform duration-500 hover:-translate-y-2 hover:scale-[1.01] shadow-[0_0_40px_rgba(219,39,119,0.3)] dark:shadow-[0_0_40px_rgba(251,207,232,0.15)]"
+      {/* THE REDIRECT WRAPPER */}
+      <a 
+        href={exp.certificateUrl} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="block w-full no-underline cursor-pointer"
       >
-        
-        {/* The True Pastel Persistent Outer Glow (Softened & Adaptive) */}
-        <div className="absolute inset-0 bg-gradient-to-b from-pink-400/40 via-transparent to-purple-400/40 dark:from-pink-200/40 dark:to-purple-200/40 blur-2xl opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
-        
-        {/* The Sharp Pastel Gradient Border (Adaptive) */}
-        <div className="absolute inset-0 bg-gradient-to-b from-pink-400/30 to-purple-400/30 dark:from-pink-200/30 dark:to-purple-200/30 rounded-3xl z-0" />
+        {/* Hover Wrapper (Moves slightly on hover) */}
+        <motion.div 
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          whileHover={{ 
+            scale: 1.03, 
+            y: -5,
+            transition: { type: "spring", stiffness: 400, damping: 10 } 
+          }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-10%" }}
+          className="relative w-full mx-auto rounded-3xl p-[3px] group shadow-[0_0_40px_rgba(251,207,232,0.15)]"
+        >
+          
+          {/* The True Pastel Persistent Outer Glow (Softened & Static) */}
+          <div className="absolute inset-0 bg-gradient-to-b from-pink-200/40 to-purple-200/40 blur-2xl opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+          
+          {/* The Sharp Pastel Gradient Border (Static) */}
+          <div className="absolute inset-0 bg-gradient-to-b from-pink-200/30 to-purple-200/30 rounded-3xl z-0" />
 
-        {/* The Solid Inner Card (Full Beige / White Glass) */}
-        <div className="relative z-10 w-full min-h-[70vh] bg-white/60 dark:bg-black/95 backdrop-blur-xl rounded-[calc(1.5rem-3px)] flex flex-col px-8 md:px-16 lg:px-24 py-16 justify-center items-center text-center shadow-xl transition-colors duration-500">
-            
-            {/* Company Title (Adaptive) */}
-            <h3 className="w-full text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-2 text-gray-900 dark:text-white">
-              {exp.company}
-            </h3>
-            
-            {/* Role (Adaptive Saturated Pastels) */}
-            <p className="text-pink-600 dark:text-pink-100 font-mono text-xs md:text-sm uppercase tracking-[0.2em] font-bold mb-8">
-              {exp.role}
-            </p>
+          {/* The Solid Inner Card (Permanently Midnight) */}
+          <div className="relative z-10 w-full min-h-[70vh] bg-[#050505] backdrop-blur-xl rounded-[calc(1.5rem-3px)] flex flex-col px-8 md:px-16 lg:px-24 py-16 justify-center items-center text-center shadow-xl border border-white/5 transition-all duration-500">
+              
+              {/* Link Icon Overlay */}
+              <div className="absolute top-8 right-8 text-pink-200 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1 group-hover:-translate-y-1">
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </div>
 
-            {/* Description (Editorial Reduced) */}
-            <p className="text-sm md:text-base leading-relaxed text-gray-600 dark:text-gray-400 max-w-4xl mx-auto mb-10">
-              {exp.desc}
-            </p>
+              {/* Company Title (Hardcoded White) */}
+              <h3 className="w-full text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-2 text-[#ffffff] group-hover:text-pink-300 transition-colors">
+                {exp.company}
+              </h3>
+              
+              {/* Role (Hardcoded Pastel) */}
+              <p className="text-pink-100 font-mono text-xs md:text-sm uppercase tracking-[0.2em] font-bold mb-8">
+                {exp.role}
+              </p>
 
-            {/* Verification Link */}
-            {exp.certificateUrl && (
-               <div className="mt-auto pt-8 flex justify-center w-full">
-                  <a 
-                    href={exp.certificateUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-mono text-pink-600 dark:text-pink-200 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 group"
-                  >
-                    View {exp.company} Certificate 
-                    <span className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300">↗</span>
-                  </a>
-               </div>
-            )}
-        </div>
+              {/* Description (Hardcoded Muted) */}
+              <p className="text-sm md:text-base leading-relaxed text-gray-400 max-w-4xl mx-auto mb-10">
+                {exp.desc}
+              </p>
 
-      </motion.div>
+              {/* Verification Label */}
+              <span className="mt-6 inline-block text-[10px] font-bold text-pink-300 uppercase tracking-[0.3em] opacity-60 group-hover:opacity-100 transition-opacity">
+                Click anywhere to view certificate →
+              </span>
+          </div>
+
+        </motion.div>
+      </a>
     </motion.div>
   );
 }
@@ -151,54 +162,62 @@ export default function ExperiencesSection() {
   const scrollHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section ref={containerRef} className="relative w-full bg-[var(--bg)] pt-[25vh] pb-[100vh]" style={{ fontFamily: CERIF }}>
+    <section id="experience" ref={containerRef} className="relative z-30 w-full bg-[#000000] pt-2 pb-24 px-12 md:px-24 lg:px-32 transition-colors duration-500 transform-gpu will-change-transform contain-paint" style={{ fontFamily: CERIF, clipPath: 'inset(0)' }}>
       
-      {/* STICKY TIMELINE (Scoped to section) */}
-      <div className="absolute left-4 md:left-12 top-0 h-full w-[2px] z-[100] hidden md:flex flex-col items-center">
-        <div className="sticky top-1/2 -translate-y-1/2 h-[60vh] w-full bg-black/5 dark:bg-white/5 flex flex-col items-center">
-            {/* Fill Line */}
-            <motion.div 
-              style={{ height: scrollHeight }}
-              className="absolute top-0 w-full bg-pink-200 shadow-[0_0_15px_rgba(251,207,232,0.5)]"
-            />
-            
-            {/* Date Labels */}
-            <div className="absolute top-0 left-6 h-full flex flex-col justify-between py-4">
-              {experiences.map((exp, i) => (
-                <motion.div
-                  key={i}
-                  initial={false}
-                  animate={{ 
-                    opacity: activeDate === exp.date ? 1 : 0.3,
-                    x: activeDate === exp.date ? 10 : 0
-                  }}
-                  className="text-gray-900 dark:text-white font-mono text-[10px] whitespace-nowrap tracking-widest uppercase"
-                >
-                  {exp.date}
-                </motion.div>
-              ))}
-            </div>
-        </div>
-      </div>
-
-      <div className="w-full flex flex-col items-center">
+      {/* THE UNIFIED MASTER CONTAINER: Centered and responsive */}
+      <div className="relative w-full max-w-[1400px] mx-auto flex gap-4 md:gap-12">
         
-        {/* SECTION TITLE — Global Title Uniformity */}
-        <SpiderReveal 
-          text="MY EXPERIENCES"
-          className="text-6xl md:text-8xl font-bold uppercase tracking-tighter mb-[15vh] text-center text-gray-900 dark:text-white opacity-80"
-        />
+        {/* COLUMN 1: STICKY TIMELINE (Now integrated into the grid for stability) */}
+        <div className="relative w-8 md:w-16 shrink-0 hidden md:block">
+          <div className="absolute left-4 md:left-8 top-0 h-full w-[2px] z-[100] flex flex-col items-center">
+            <div className="sticky top-1/2 -translate-y-1/2 h-[60vh] w-full bg-white/5 flex flex-col items-center">
+                {/* Fill Line */}
+                <motion.div 
+                  style={{ height: scrollHeight }}
+                  className="absolute top-0 w-full bg-pink-200 shadow-[0_0_15px_rgba(251,207,232,0.5)]"
+                />
+                
+                {/* Date Labels */}
+                <div className="absolute top-0 left-6 h-full flex flex-col justify-between py-4">
+                  {experiences.map((exp, i) => (
+                    <motion.div
+                      key={i}
+                      initial={false}
+                      animate={{ 
+                        opacity: activeDate === exp.date ? 1 : 0.3,
+                        x: activeDate === exp.date ? 10 : 0
+                      }}
+                      className="text-[#ffffff] font-mono text-[10px] whitespace-nowrap tracking-widest uppercase"
+                    >
+                      {exp.date}
+                    </motion.div>
+                  ))}
+                </div>
+            </div>
+          </div>
+        </div>
 
-        {/* CARD CONTAINER — Perfectly Centered 90% Width */}
-        <div className="relative flex flex-col w-full mx-auto">
-          {experiences.map((exp, index) => (
-            <ExperienceCard 
-              key={index} 
-              exp={exp} 
-              index={index} 
-              setActiveDate={setActiveDate} 
+        {/* COLUMN 2: SECTION CONTENT (Centered relative to the timeline unit) */}
+        <div className="flex-1 flex flex-col items-center">
+          {/* TITLE WRAPPER — Spider Reveal with Massive Clearance */}
+          <div className="relative z-20 text-center w-full mb-32 md:mb-48">
+            <SpiderReveal 
+              text="MY EXPERIENCES"
+              className="text-6xl md:text-8xl font-bold uppercase tracking-tighter text-center text-[#ffffff] opacity-80"
             />
-          ))}
+          </div>
+
+          {/* CARD CONTAINER — Perfectly centered within its flex column */}
+          <div className="relative flex flex-col w-full max-w-[1100px] gap-16">
+            {experiences.map((exp, index) => (
+              <ExperienceCard 
+                key={index} 
+                exp={exp} 
+                index={index} 
+                setActiveDate={setActiveDate} 
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

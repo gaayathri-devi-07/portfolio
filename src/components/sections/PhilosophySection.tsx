@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import SplineScene from "@/components/3d/SplineScene";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -47,6 +47,7 @@ function SpiderReveal({ text, className }: { text: string; className?: string })
 
 export default function PhilosophySection() {
   const splineWrapperRef = useRef<HTMLDivElement>(null);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const el = splineWrapperRef.current;
@@ -57,65 +58,83 @@ export default function PhilosophySection() {
   }, []);
 
   return (
-    <section
-      className="relative w-full min-h-screen py-24 flex flex-col items-center justify-center bg-[var(--bg)] transition-colors duration-500 gpu-accelerated"
-      style={{ fontFamily: CANELA }}
-    >
-      {/* GLOBAL CONTAINER LOCK: Protected horizontal padding to prevent edge bleeding */}
-      <div className="relative w-full max-w-7xl mx-auto px-8 md:px-16 lg:px-24 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-24 gpu-accelerated !overflow-visible">
-        
-        {/* Left Column (Shifted Upward) */}
-        <div className="flex flex-col justify-center -mt-12 md:-mt-20 gpu-accelerated">
-          <div className="max-w-[600px] flex flex-col items-start text-left">
-            
-            {/* Extended Animated Pink Trace Line (Adaptive) */}
-            <div className="relative h-[2px] w-48 md:w-64 bg-black/10 dark:bg-white/10 overflow-hidden mb-6">
-              <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-pink-300/80 dark:via-pink-300 to-transparent animate-loading-h" />
-            </div>
-            
-            <div className="w-full">
-              <h2 className="text-5xl md:text-6xl lg:text-[5rem] font-bold tracking-tighter w-full leading-none md:leading-tight mb-8 text-neutral-900 dark:text-white gpu-accelerated">
-                <span className="whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-rose-600 dark:from-pink-200 dark:to-rose-200">Welcome to</span> <br />
-                <span className="whitespace-nowrap">my <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-pink-600 dark:from-purple-200 dark:to-pink-200">space.</span></span>
-              </h2>
-            </div>
-            
-            <p className="text-base md:text-lg leading-snug md:leading-snug text-gray-700 dark:text-gray-400 max-w-xl gpu-accelerated">
-              An AI-Enabled Full-Stack Engineer. I build enterprise-grade applications that connect immersive 3D frontends with scalable Python/FastAPI backends.
-            </p>
-          </div>
-        </div>
-
-        {/* Center Column: The 3D Centerpiece (Expanded proportional share) */}
-        <div className="flex lg:w-1/2 justify-center pointer-events-auto !overflow-visible">
-          <div 
-            ref={splineWrapperRef} 
-            className="w-full aspect-square max-w-[800px] mx-auto relative z-10 pointer-events-auto gpu-accelerated !overflow-visible"
-            style={{ transform: 'scale(1.2)' }}
+    <>
+      {/* 1. THE CINEMATIC OVERLAY - MOVED OUTSIDE TRANSFORM BUBBLE TO ENSURE VIEWPORT CENTERING */}
+      <AnimatePresence>
+        {!isReady && (
+          <motion.div 
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="fixed inset-0 z-[9999] bg-[#000000]"
           >
-            <div className="absolute bottom-0 right-0 w-40 h-16 bg-[var(--bg)] transition-colors duration-500 z-50 pointer-events-none" />
-            <SplineScene
-              className="w-full h-full"
-              scene="https://prod.spline.design/2KPdIlgyxocYUnwu/scene.splinecode"
-            />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 w-full">
+              <div className="w-48 h-[1px] bg-[#FFB6C1]/10 relative overflow-hidden">
+                <motion.div 
+                  className="absolute top-0 left-0 h-full bg-[#FFB6C1] w-full"
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "100%" }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                />
+              </div>
+              <span className="text-[10px] font-mono text-[#FFB6C1]/40 tracking-[0.3em] uppercase animate-pulse">
+                Rendering 3D Space
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <section
+        className="relative z-10 w-full min-h-screen bg-[#000000] py-24 md:py-32 flex flex-col justify-center overflow-hidden transform-gpu will-change-transform contain-paint"
+        style={{ fontFamily: CANELA }}
+      >
+        <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-16 lg:gap-8 items-center px-6 lg:px-12 !overflow-visible">
+          
+          <div className="flex flex-col text-center lg:text-left order-1 lg:order-1 w-full max-w-full gpu-accelerated !pl-[4vw]">
+            <div className="max-w-[600px] mx-auto lg:mx-0 flex flex-col items-center lg:items-start">
+              <div className="relative h-[2px] w-48 md:w-64 bg-white/10 overflow-hidden mb-6">
+                <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-pink-300 to-transparent animate-loading-h" />
+              </div>
+              <div className="w-full">
+                <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 break-words leading-tight">
+                  <span className="text-pink-200">Welcome</span> <br />
+                  to my space.
+                </h2>
+              </div>
+              <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-md mx-auto lg:mx-0 break-words text-center lg:text-left">
+                An AI-Enabled Full-Stack Engineer. I build enterprise-grade applications that connect immersive 3D frontends with scalable Python/FastAPI backends.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex justify-center items-center w-full order-2 lg:order-2 pointer-events-none !overflow-visible relative">
+            <div 
+              ref={splineWrapperRef} 
+              className="relative w-full max-w-[450px] h-[350px] md:h-[450px] lg:h-[550px] bg-[#000000] overflow-hidden flex items-center justify-center z-10 pointer-events-none mx-auto"
+            >
+              <div className="w-full h-full scale-[1.15] translate-y-6 translate-x-4">
+                  <SplineScene
+                    className="w-full h-full"
+                    scene="https://prod.spline.design/2KPdIlgyxocYUnwu/scene.splinecode"
+                    onLoad={() => setIsReady(true)}
+                  />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col text-center lg:text-left order-3 lg:order-3 w-full max-w-full gpu-accelerated">
+              <div className="relative h-[2px] w-48 md:w-64 bg-white/10 overflow-hidden mb-6 mx-auto lg:mx-0">
+                <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-pink-300 to-transparent animate-loading-h" />
+              </div>
+             <div className="max-w-md mx-auto lg:mx-0">
+                <p className="text-gray-400 text-base md:text-lg leading-relaxed break-words">
+                  Engineering intelligent, seamless applications that solve real problems. I build digital products that feel alive.
+                </p>
+             </div>
           </div>
         </div>
-
-        {/* Right Column - DE-CLUTTERED */}
-        <div className="flex flex-col justify-center text-left gpu-accelerated">
-            {/* Extended Animated Pink Trace Line (Adaptive) */}
-            <div className="relative h-[2px] w-48 md:w-64 bg-black/10 dark:bg-white/10 overflow-hidden mb-6">
-              <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-pink-300/80 dark:via-pink-300 to-transparent animate-loading-h" />
-            </div>
-           <div className="max-w-md">
-              <p className="text-base md:text-lg leading-snug md:leading-snug text-gray-700 dark:text-gray-400 gpu-accelerated">
-                Engineering intelligent, seamless applications that solve real problems. I build digital products that feel alive.
-              </p>
-           </div>
-        </div>
-
-      </div>
-    </section>
+      </section>
+    </>
   );
-
 }

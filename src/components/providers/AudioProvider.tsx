@@ -39,21 +39,21 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     whiteNoise.buffer = noiseBuffer
     whiteNoise.loop = true
 
-    // Bandpass filter to shape white noise into rain-like sound
+    // Bandpass filter to shape white noise into mild rain-like sound
     const bandpass = ctx.createBiquadFilter()
     bandpass.type = 'bandpass'
-    bandpass.frequency.value = 800
-    bandpass.Q.value = 0.5
+    bandpass.frequency.value = 1000 // Slightly higher for "mild" feel
+    bandpass.Q.value = 0.4
 
-    // Subtle lowpass for warmth
+    // Subtle lowpass for warmth and "milkiness"
     const lowpass = ctx.createBiquadFilter()
     lowpass.type = 'lowpass'
-    lowpass.frequency.value = 3000
-    lowpass.Q.value = 1
+    lowpass.frequency.value = 2500
+    lowpass.Q.value = 0.8
 
-    // Master gain for rain (very low volume)
+    // Master gain for rain (very mild volume)
     const gain = ctx.createGain()
-    gain.gain.value = 0.035
+    gain.gain.value = 0.025
 
     whiteNoise.connect(bandpass)
     bandpass.connect(lowpass)
@@ -64,35 +64,44 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     return { whiteNoise, gain }
   }, [])
 
-  const playKeyboardClick = useCallback((ctx: AudioContext) => {
+  const playBirdChirp = useCallback((ctx: AudioContext) => {
     const osc = ctx.createOscillator()
     const gain = ctx.createGain()
     const now = ctx.currentTime
 
     osc.type = 'sine'
-    // Random pitch between 600-1200Hz for mechanical key variety
-    osc.frequency.value = 600 + Math.random() * 600
+    // Bird chirp: quick frequency sweep from 3000Hz to 5000Hz
+    const baseFreq = 3000 + Math.random() * 1000
+    osc.frequency.setValueAtTime(baseFreq, now)
+    osc.frequency.exponentialRampToValueAtTime(baseFreq + 1500, now + 0.1)
 
-    gain.gain.setValueAtTime(0.02, now)
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04)
+    // Very soft volume for "mild" birds
+    gain.gain.setValueAtTime(0, now)
+    gain.gain.linearRampToValueAtTime(0.015, now + 0.02)
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12)
 
     osc.connect(gain)
     gain.connect(ctx.destination)
     osc.start(now)
-    osc.stop(now + 0.04)
+    osc.stop(now + 0.15)
   }, [])
 
-  const startKeyboardLoop = useCallback((ctx: AudioContext) => {
-    const scheduleClick = () => {
-      if (Math.random() > 0.25) {
-        playKeyboardClick(ctx)
+  const startBirdLoop = useCallback((ctx: AudioContext) => {
+    const scheduleChirp = () => {
+      // Occasional birds, not constant
+      if (Math.random() > 0.7) {
+        // Sometimes a double chirp
+        playBirdChirp(ctx)
+        if (Math.random() > 0.5) {
+          setTimeout(() => playBirdChirp(ctx), 150)
+        }
       }
-      // Random interval 150-500ms for natural typing rhythm
-      const nextDelay = 150 + Math.random() * 350
-      keyboardIntervalRef.current = setTimeout(scheduleClick, nextDelay) as unknown as ReturnType<typeof setInterval>
+      // Sparse intervals for peace: 3s to 8s
+      const nextDelay = 3000 + Math.random() * 5000
+      keyboardIntervalRef.current = setTimeout(scheduleChirp, nextDelay) as unknown as ReturnType<typeof setInterval>
     }
-    scheduleClick()
-  }, [playKeyboardClick])
+    scheduleChirp()
+  }, [playBirdChirp])
 
   const toggleAudio = useCallback(() => {
     if (isPlaying) {
@@ -118,10 +127,10 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       const { whiteNoise } = createRainNoise(ctx)
       rainNodeRef.current = whiteNoise
 
-      startKeyboardLoop(ctx)
+      startBirdLoop(ctx)
       setIsPlaying(true)
     }
-  }, [isPlaying, createRainNoise, startKeyboardLoop])
+  }, [isPlaying, createRainNoise, startBirdLoop])
 
   return (
     <AudioCtx.Provider value={{ isPlaying, toggleAudio }}>

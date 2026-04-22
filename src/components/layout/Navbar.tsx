@@ -11,8 +11,7 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false)
   const { isPlaying, toggleAudio } = useAudio()
   const navRef = useRef<HTMLElement>(null)
-  const [hidden, setHidden] = useState(false)
-  const lastScrollY = useRef(0)
+  const [hidden, setHidden] = useState(true)
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -21,56 +20,113 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentY = window.scrollY
-      if (currentY > lastScrollY.current && currentY > 100) {
-        setHidden(true)
-      } else {
+      const isTop = window.scrollY < 100
+      // Always show if at top, otherwise follow the 'hidden' state from mousemove
+      if (isTop) {
         setHidden(false)
+      } else {
+        // If we just scrolled down past 100px and were not hovering, hide it
+        setHidden(true)
       }
-      lastScrollY.current = currentY
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const isTop = window.scrollY < 100
+      // If we are at the top, we don't need hover logic to show it
+      if (isTop) {
+        setHidden(false)
+        return
+      }
+
+      // Reveal if mouse is near top (within 80px) after scrolling
+      if (e.clientY < 80) {
+        setHidden(false)
+      } else if (e.clientY > 140) { // Hide if mouse moves away significantly
+        setHidden(true)
+      }
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('mousemove', handleMouseMove)
+    
+    // Initial check
+    handleScroll()
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('mousemove', handleMouseMove)
+    }
   }, [])
 
   useEffect(() => {
     if (navRef.current) {
       gsap.to(navRef.current, {
-        y: hidden ? -100 : 0,
-        duration: 0.4,
-        ease: 'power2.out',
+        y: hidden ? -120 : 0, 
+        opacity: hidden ? 0 : 1,
+        duration: 0.5,
+        ease: 'expo.out',
       })
     }
   }, [hidden])
 
+  const navLinks = [
+    { name: 'Home', href: '#home' },
+    { name: 'About', href: '#about' },
+    { name: 'Projects', href: '#projects' },
+    { name: 'Internships', href: '#internships' },
+    { name: 'Skills', href: '#skills' },
+    { name: 'Contact', href: '#contact' },
+  ];
+
   return (
-    <nav
-      ref={navRef}
-      className="fixed top-0 left-0 right-0 z-[100] glass"
-      style={{
-        padding: '16px 32px',
-      }}
-    >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Logo / Name */}
-        <Magnetic>
-          <a
-            href="#"
-            className="font-display text-lg font-bold tracking-tight inline-block"
-            style={{ color: 'var(--fg)' }}
-            data-cursor-hover
-          >
-            <span className="text-pink-200">GD</span>
+    <>
+      {/* INVISIBLE TRIGGER ZONE */}
+      <div 
+        className="fixed top-0 left-0 right-0 h-4 z-[101]"
+        onMouseEnter={() => setHidden(false)}
+      />
 
-            <span className="hidden sm:inline ml-2 text-sm font-normal" style={{ color: 'var(--muted)' }}>
-              / Gaayathri Devi
-            </span>
-          </a>
-        </Magnetic>
+      <nav
+        ref={navRef}
+        className="fixed top-0 left-0 right-0 z-[100] bg-[#000000]/90 backdrop-blur-xl border-b border-white/5 transition-all shadow-2xl flex items-center justify-between px-8 md:px-12 py-4"
+      >
+        {/* Logo / Name — Fixed Left */}
+        <div className="flex-1 flex justify-start z-10">
+          <Magnetic>
+            <a
+              href="#"
+              className="font-display text-lg font-bold tracking-tight inline-block"
+              style={{ color: 'var(--fg)' }}
+              data-cursor-hover
+            >
+              <span className="text-pink-200">GD</span>
+              <span className="hidden sm:inline ml-2 text-sm font-normal" style={{ color: 'var(--muted)' }}>
+                / Gaayathri Devi
+              </span>
+            </a>
+          </Magnetic>
+        </div>
 
-        {/* ISOLATED & PINNED SOUND BUTTON */}
-        <div className="fixed top-2 right-4 md:top-4 md:right-8 z-[100] flex items-center justify-center">
+        {/* NAV LINKS — Absolute Center */}
+        <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+          <ul className="flex items-center gap-8">
+            {navLinks.map((link) => (
+              <li key={link.name}>
+                <Magnetic>
+                  <a 
+                    href={link.href}
+                    className="text-[10px] font-mono tracking-[0.3em] uppercase text-gray-400 hover:text-pink-200 transition-colors duration-300"
+                  >
+                    {link.name}
+                  </a>
+                </Magnetic>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* SOUND OPTION — Fixed Right */}
+        <div className="flex-1 flex justify-end z-10">
           <Magnetic>
             <button
               onClick={toggleAudio}
@@ -98,8 +154,8 @@ export default function Navbar() {
             </button>
           </Magnetic>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   )
 }
 

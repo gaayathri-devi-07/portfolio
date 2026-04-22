@@ -37,38 +37,11 @@ interface SplineSceneProps {
 
 function SplineLoader() {
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
-      <div className="flex flex-col items-center gap-5">
-        {/* Minimal concentric ring spinner */}
-        <div className="relative w-12 h-12">
-          <div
-            className="absolute inset-0 rounded-full border border-transparent"
-            style={{
-              borderTopColor: 'var(--accent)',
-              animation: 'spline-spin 1.2s cubic-bezier(0.5,0,0.5,1) infinite',
-            }}
-          />
-          <div
-            className="absolute inset-[4px] rounded-full border border-transparent"
-            style={{
-              borderTopColor: 'var(--muted)',
-              opacity: 0.4,
-              animation: 'spline-spin 1.8s cubic-bezier(0.5,0,0.5,1) infinite reverse',
-            }}
-          />
-        </div>
-        <span
-          className="font-mono text-[10px] tracking-[0.3em] uppercase"
-          style={{ color: 'var(--muted)', opacity: 0.6 }}
-        >
-          Initialising
-        </span>
-      </div>
-      <style>{`
-        @keyframes spline-spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
+    <div className="w-full h-full flex flex-col items-center justify-center bg-[#000000]">
+      <div className="w-16 h-16 rounded-full border-t-2 border-purple-500 animate-spin" />
+      <span className="mt-4 text-xs font-mono text-purple-500/50 tracking-widest uppercase animate-pulse">
+        Initializing 3D Environment...
+      </span>
     </div>
   )
 }

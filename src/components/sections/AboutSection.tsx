@@ -33,13 +33,13 @@ export default function AboutSection() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative w-full py-32 px-8 md:px-16 lg:px-24 bg-[var(--bg)] min-h-[80vh] flex items-center justify-center overflow-hidden">
+    <section ref={containerRef} className="relative w-full py-32 px-8 md:px-16 lg:px-24 bg-[#000000] min-h-[80vh] flex items-center justify-center overflow-hidden">
       <div className="w-full max-w-5xl mx-auto" style={{ fontFamily: 'Playfair Display, serif' }}>
          <div ref={textContainerRef} className="flex flex-wrap gap-x-3 md:gap-x-4 gap-y-2 md:gap-y-4 justify-center text-center">
             {ABOUT_TEXT.split(" ").map((word, index) => (
                <span key={index} className="inline-block overflow-hidden py-1">
                   <span 
-                    className="inline-block word-reveal origin-bottom-left text-2xl md:text-5xl lg:text-6xl text-[var(--fg)] font-medium tracking-tight"
+                    className="inline-block word-reveal origin-bottom-left text-2xl md:text-5xl lg:text-6xl text-[#ffffff] font-medium tracking-tight"
                     style={{ transform: 'translateY(100%) rotateZ(3deg)', opacity: 0 }}
                   >
                      {word}

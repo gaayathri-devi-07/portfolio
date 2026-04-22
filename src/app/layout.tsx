@@ -55,7 +55,7 @@ export const metadata: Metadata = {
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { AudioProvider } from "@/components/providers/AudioProvider";
 import Navbar from "@/components/layout/Navbar";
-import { SmoothScrollProvider } from "@/components/layout/SmoothScrollProvider";
+import LenisProvider from "@/components/providers/LenisProvider";
 import GlobalScrollTracker from "@/components/layout/GlobalScrollTracker";
 import GrainOverlay from "@/components/ui/GrainOverlay";
 import CustomCursor from "@/components/ui/CustomCursor";
@@ -69,23 +69,29 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${bebasNeue.variable} h-full antialiased scroll-smooth`}
+      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${bebasNeue.variable} h-full antialiased dark`}
+      style={{ colorScheme: 'dark' }}
       suppressHydrationWarning
     >
       <body 
-        className="min-h-full flex flex-col bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500 overflow-x-hidden"
+        className="min-h-full w-full max-w-[100vw] flex flex-col bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500 overflow-x-hidden"
         suppressHydrationWarning
       >
-        <ThemeProvider attribute="class" defaultTheme="dark">
+        <ThemeProvider 
+          attribute="class" 
+          defaultTheme="dark" 
+          forcedTheme="dark" 
+          enableSystem={false}
+        >
           <AudioProvider>
-            <SmoothScrollProvider>
+            <LenisProvider>
               <CustomCursor />
               <BackgroundParticles />
               <GlobalScrollTracker />
               <GrainOverlay />
               <Navbar />
               {children}
-            </SmoothScrollProvider>
+            </LenisProvider>
           </AudioProvider>
         </ThemeProvider>
       </body>
