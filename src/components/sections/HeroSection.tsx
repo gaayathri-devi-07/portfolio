@@ -94,7 +94,7 @@ export default function HeroSection() {
             className="fixed inset-0 z-[9999] bg-[#000000]"
           >
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-6 w-full">
-              <span className="text-xs md:text-sm font-mono tracking-[0.5em] text-[#FFB6C1]/80 uppercase animate-pulse">
+              <span className="text-sm md:text-lg font-mono tracking-[0.5em] text-[#FFB6C1]/80 uppercase animate-pulse">
                 Syncing Neural Engine
               </span>
               {/* Perfect Straight Line Loader - Pastel Pink */}
@@ -151,9 +151,9 @@ export default function HeroSection() {
               initial={{ y: "20vh", opacity: 0, scale: 0.95 }}
               animate={isRobotLoaded ? { y: 0, opacity: 1, scale: 1 } : { y: "20vh", opacity: 0, scale: 0.95 }}
               transition={{ type: "spring", stiffness: 350, damping: 25, mass: 0.5 }}
-              className="absolute inset-0 w-full h-screen flex items-center justify-center z-0 pointer-events-none gpu-accelerated"
+              className="absolute inset-0 w-full h-screen flex items-center justify-center z-0 pointer-events-auto gpu-accelerated"
           >
-              <div className="relative w-full max-w-[1400px] h-full flex items-center justify-center pointer-events-none overflow-hidden">
+              <div className="relative w-full max-w-[1400px] h-full flex items-center justify-center pointer-events-auto overflow-hidden">
                   <Suspense fallback={null}>
                     <SplineScene 
                         scene="https://prod.spline.design/IYhNPPRr0afNe8vH/scene.splinecode" 

@@ -77,7 +77,7 @@ export default function PhilosophySection() {
                   transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
                 />
               </div>
-              <span className="text-[10px] font-mono text-[#FFB6C1]/40 tracking-[0.3em] uppercase animate-pulse">
+              <span className="text-xs md:text-sm font-mono text-[#FFB6C1]/40 tracking-[0.3em] uppercase animate-pulse">
                 Rendering 3D Space
               </span>
             </div>

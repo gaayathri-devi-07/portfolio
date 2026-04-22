@@ -3,19 +3,22 @@ import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function CustomCursor() {
-  const [isHovered, setIsHovered] = useState(false);
-  const mouseX = useMotionValue(-100);
-  const mouseY = useMotionValue(-100);
+  // 1. Bypass React State for raw coordinates
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-  // Spring physics for that high-end, magnetic smoothness
-  const springConfig = { damping: 25, stiffness: 700, mass: 0.5 };
+  // 2. Aggressive spring physics for zero-lag tracking (Elite Calibration)
+  const springConfig = { damping: 28, stiffness: 1000, mass: 0.01 };
   const cursorX = useSpring(mouseX, springConfig);
   const cursorY = useSpring(mouseY, springConfig);
 
+  const [isHovered, setIsHovered] = useState(false);
+
   useEffect(() => {
+    // 3. Update motion values directly (DOES NOT trigger a React re-render)
     const moveCursor = (e: MouseEvent) => {
-      mouseX.set(e.clientX - 10); // 10 is half the width/height (w-5) to center it
-      mouseY.set(e.clientY - 10);
+      mouseX.set(e.clientX - 8); // -8 centers a 16px cursor (w-4 h-4)
+      mouseY.set(e.clientY - 8);
     };
 
     const handleHoverStart = (e: MouseEvent) => {
@@ -24,7 +27,6 @@ export default function CustomCursor() {
         setIsHovered(true);
       }
     };
-
     const handleHoverEnd = () => setIsHovered(false);
 
     window.addEventListener("mousemove", moveCursor);
@@ -40,17 +42,17 @@ export default function CustomCursor() {
 
   return (
     <motion.div
-      id="custom-cursor"
-      animate={{
-        scale: isHovered ? 2.5 : 1, // Subtle expansion
-        backgroundColor: isHovered ? "rgba(251, 207, 232, 0.15)" : "rgba(251, 207, 232, 0)", // Fixed animatable color
-        borderColor: isHovered ? "#fbcfe8" : "#f9a8d4", // Pink-200 to Pink-300
-        borderWidth: isHovered ? "1px" : "2px", // Thinner on hover
-        boxShadow: isHovered ? "0 0 20px rgba(251, 207, 232, 0.6)" : "0 0 0px rgba(251, 207, 232, 0)", // Fixed animatable glow
+      className="fixed top-0 left-0 w-4 h-4 rounded-full pointer-events-none z-[9999] mix-blend-difference"
+      style={{
+        x: cursorX,
+        y: cursorY,
       }}
-      transition={{ type: "spring", stiffness: 250, damping: 20 }}
-      style={{ x: cursorX, y: cursorY }}
-      className="fixed top-0 left-0 w-5 h-5 rounded-full pointer-events-none z-[9999]"
+      animate={{
+        scale: isHovered ? 4 : 1,
+        backgroundColor: isHovered ? "rgba(168, 85, 247, 0.2)" : "white",
+        border: isHovered ? "1px solid #a855f7" : "none"
+      }}
+      transition={{ scale: { type: "spring", stiffness: 300, damping: 20 } }}
     />
   );
 }
