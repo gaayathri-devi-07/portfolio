@@ -24,7 +24,7 @@ function SpiderReveal({ text, className }: { text: string; className?: string })
       rotate: 15,
       opacity: 0,
       duration: 1,
-      ease: "power4.out",
+      ease: "expo.out",
       stagger: 0.05,
     });
   }, []);
@@ -102,7 +102,7 @@ function ExperienceCard({ exp, index, setActiveDate }: { exp: any, index: number
         <div className="absolute inset-0 bg-gradient-to-b from-pink-400/30 to-purple-400/30 dark:from-pink-200/30 dark:to-purple-200/30 rounded-3xl z-0" />
 
         {/* The Solid Inner Card (Full Beige / White Glass) */}
-        <div className="relative z-10 w-full min-h-[70vh] bg-white/60 dark:bg-[#0a0a0a]/95 backdrop-blur-xl rounded-[calc(1.5rem-3px)] flex flex-col px-8 md:px-16 lg:px-24 py-16 justify-center items-center text-center shadow-xl transition-colors duration-500">
+        <div className="relative z-10 w-full min-h-[70vh] bg-white/60 dark:bg-black/95 backdrop-blur-xl rounded-[calc(1.5rem-3px)] flex flex-col px-8 md:px-16 lg:px-24 py-16 justify-center items-center text-center shadow-xl transition-colors duration-500">
             
             {/* Company Title (Adaptive) */}
             <h3 className="w-full text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-2 text-gray-900 dark:text-white">

@@ -87,35 +87,22 @@ export default function HeroSection() {
       ref={containerRef}
       className="relative w-full min-h-screen h-[150vh] bg-[var(--bg)] transition-colors duration-500 overflow-visible"
     >
-      {/* PERFORMANCE INITIALIZER MASK */}
-      <AnimatePresence>
-        {!isRobotLoaded && (
-          <motion.div 
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "circOut" }}
-            className="fixed inset-0 z-[9999] bg-[#e5e4df] dark:bg-black flex items-center justify-center pointer-events-auto"
-          >
-            <div className="flex flex-col items-center gap-6">
-              <motion.h1 
-                animate={{ opacity: [0.3, 1, 0.3] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="text-gray-900 dark:text-white text-[10px] tracking-[0.8em] font-mono uppercase"
-              >
-                Syncing Neural Engine
-              </motion.h1>
-              <div className="w-48 h-[1px] bg-black/10 dark:bg-white/10 relative overflow-hidden">
-                <motion.div 
-                  initial={{ x: "-100%" }}
-                  animate={{ x: "0%" }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-0 bg-black/40 dark:bg-white/40"
-                />
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Full-Screen Curtain Loader */}
+      <div 
+        className={`fixed inset-0 z-[999] flex flex-col items-center justify-center bg-[#e5e4df] dark:bg-[#000000] transition-opacity duration-1000 ease-in-out ${
+          isRobotLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
+      >
+        <div className="flex flex-col items-center gap-6">
+          <span className="text-xs md:text-sm font-mono tracking-[0.5em] text-gray-900 dark:text-white uppercase">
+            Syncing Neural Engine
+          </span>
+          {/* Animated Loading Bar */}
+          <div className="w-48 md:w-64 h-[1px] bg-gray-300 dark:bg-gray-800 relative overflow-hidden">
+            <div className="absolute top-0 left-0 h-full bg-pink-300 w-full animate-[loading_2s_ease-in-out_infinite] origin-left" />
+          </div>
+        </div>
+      </div>
 
       {/* Hero Wrapper */}
       <motion.div 
@@ -134,14 +121,14 @@ export default function HeroSection() {
         >
             <h2 
                 suppressHydrationWarning
-                className="text-xl md:text-2xl lg:text-3xl tracking-[0.4em] text-gray-700 dark:text-white/40 mb-4 md:mb-6 font-medium"
+                className="text-xl md:text-2xl lg:text-3xl tracking-[0.4em] text-gray-800 dark:text-gray-300/40 mb-4 md:mb-6 font-medium"
                 style={{ fontFamily: CANELA }}
             >
                 {helloText}
             </h2>
             <h1 
                 suppressHydrationWarning
-                className="text-[clamp(2.5rem,7vw,8.5rem)] leading-[1.1] text-gray-900 dark:text-white font-medium text-center"
+                className="text-[clamp(2.5rem,7vw,8.5rem)] leading-[1.1] text-gray-900 dark:text-white font-medium text-center transition-colors duration-500"
                 style={{ fontFamily: CANELA }}
             >
                 {nameText}
@@ -166,12 +153,11 @@ export default function HeroSection() {
             </div>
         </motion.div>
 
-        {/* LAYER 3: THE SUPER-MASK (Aggressive Logo Coverage - Enlarged) */}
-        {/* LAYER 3: THE SUPER-MASK (Aggressive Logo Coverage - Enlarged) */}
-        <div className="absolute bottom-0 right-0 z-[999] flex items-center justify-end pr-4 pb-4 w-96 h-32 bg-gradient-to-tl from-white/40 via-white/20 to-transparent dark:from-[#050505] dark:via-[#050505]/95 dark:to-transparent pointer-events-none">
-            <div className="flex items-center gap-3 px-4 py-2 bg-white/40 dark:bg-black/80 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-full shadow-2xl">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10b981]" />
-                <span className="text-gray-900/70 dark:text-white/70 font-mono text-[10px] uppercase tracking-[0.3em]">
+        {/* LAYER 3: THE SEAMLESS CAMOUFLAGE MASK (Watermark Smasher) */}
+        <div className="absolute bottom-0 right-0 w-80 md:w-96 h-20 bg-[#e5e4df] dark:bg-black z-[60] flex items-center justify-end pr-8 border-t border-l border-black/10 dark:border-none pointer-events-none transition-colors duration-500">
+            <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-black dark:text-white text-xs font-mono tracking-widest uppercase">
                   System: Initialized
                 </span>
             </div>

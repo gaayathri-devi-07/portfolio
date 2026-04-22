@@ -58,6 +58,8 @@ import Navbar from "@/components/layout/Navbar";
 import { SmoothScrollProvider } from "@/components/layout/SmoothScrollProvider";
 import GlobalScrollTracker from "@/components/layout/GlobalScrollTracker";
 import GrainOverlay from "@/components/ui/GrainOverlay";
+import CustomCursor from "@/components/ui/CustomCursor";
+import BackgroundParticles from "@/components/3d/BackgroundParticles";
 
 export default function RootLayout({
   children,
@@ -67,16 +69,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${bebasNeue.variable} h-full antialiased`}
+      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${bebasNeue.variable} h-full antialiased scroll-smooth`}
       suppressHydrationWarning
     >
       <body 
-        className="min-h-full flex flex-col bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500"
+        className="min-h-full flex flex-col bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500 overflow-x-hidden"
         suppressHydrationWarning
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
           <AudioProvider>
             <SmoothScrollProvider>
+              <CustomCursor />
+              <BackgroundParticles />
               <GlobalScrollTracker />
               <GrainOverlay />
               <Navbar />

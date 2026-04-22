@@ -26,7 +26,7 @@ function SpiderReveal({ text, className }: { text: string; className?: string })
       y: "100%",
       opacity: 0,
       rotate: 15,
-      duration: 1.4,
+      duration: 1.5,
       ease: "expo.out",
       stagger: 0.02,
     });

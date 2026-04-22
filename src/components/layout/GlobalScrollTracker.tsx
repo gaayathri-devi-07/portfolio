@@ -26,16 +26,21 @@ export default function GlobalScrollTracker() {
 
       {/* THE SCROLL REWARD ELEMENT (Visible only at footer) */}
       <motion.div 
-        className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[9999] flex flex-col items-center gap-2 pointer-events-none"
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999] flex flex-col items-center gap-4 pointer-events-none"
         style={{ opacity: rewardOpacity, scale: rewardScale }}
       >
-        {/* Glowing Diamond */}
-        <div className="w-6 h-6 rotate-45 bg-gradient-to-br from-pink-200 to-purple-200 shadow-[0_0_20px_#fbcfe8] flex items-center justify-center">
-          <div className="w-2 h-2 bg-white rotate-45 shadow-[0_0_10px_white]" />
+        {/* Glowing Diamond - MINIMALIST SCALE */}
+        <div className="w-7 h-7 rotate-45 bg-gradient-to-br from-white via-pink-100 to-purple-200 shadow-[0_0_30px_rgba(251,207,232,0.6)] flex items-center justify-center animate-pulse">
+          <div className="w-2.5 h-2.5 bg-white rotate-45 shadow-[0_0_12px_white]" />
         </div>
-        <span className="text-pink-200 font-mono text-[10px] tracking-[0.3em] uppercase drop-shadow-[0_0_5px_rgba(251,207,232,0.8)]">
-          Journey Complete
-        </span>
+
+        {/* Journey Complete - MINIMALIST SCALE */}
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-sm md:text-base font-black tracking-[0.4em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-white to-pink-200 animate-loading-h drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]">
+            Journey Complete
+          </span>
+          <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-pink-300 to-transparent animate-loading-h opacity-50" />
+        </div>
       </motion.div>
     </>
   );

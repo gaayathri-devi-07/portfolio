@@ -10,8 +10,8 @@ export function useMagnetic() {
     const element = ref.current;
     if (!element) return;
 
-    const xTo = gsap.quickTo(element, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
-    const yTo = gsap.quickTo(element, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+    const xTo = gsap.quickTo(element, "x", { duration: 0.8, ease: "expo.out" });
+    const yTo = gsap.quickTo(element, "y", { duration: 0.8, ease: "expo.out" });
 
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
@@ -21,11 +21,12 @@ export function useMagnetic() {
 
       // Distance check
       const distance = Math.hypot(x, y);
-      const limit = width * 1.2;
+      const limit = width * 1.5;
 
       if (distance < limit) {
-        xTo(x * 0.35);
-        yTo(y * 0.35);
+        // Subtle magnetic pull (max ~15px-20px)
+        xTo(x * 0.2);
+        yTo(y * 0.2);
       } else {
         xTo(0);
         yTo(0);

@@ -67,7 +67,7 @@ function SpiderReveal({ text, className }: { text: string; className?: string })
         toggleActions: "play reverse play reverse"
       },
       y: "100%", rotate: 15, opacity: 0,
-      duration: 1.4, ease: "expo.out", stagger: 0.1,
+      duration: 1.5, ease: "expo.out", stagger: 0.1,
     });
   }, []);
   return (

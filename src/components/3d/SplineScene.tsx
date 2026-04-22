@@ -12,7 +12,9 @@ if (typeof window !== 'undefined') {
       msg.includes('forcing loop to unroll') || 
       msg.includes('X3557') || 
       msg.includes('non-static position') ||
-      msg.includes('scroll offset')
+      msg.includes('scroll offset') ||
+      msg.includes('THREE.Clock: This module has been deprecated') ||
+      msg.includes('Multiple instances of Three.js being imported')
     ) {
       return;
     }

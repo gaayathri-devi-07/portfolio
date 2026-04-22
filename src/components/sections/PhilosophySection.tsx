@@ -26,7 +26,7 @@ function SpiderReveal({ text, className }: { text: string; className?: string })
       rotate: 15,
       opacity: 0,
       duration: 1,
-      ease: "power4.out",
+      ease: "expo.out",
       stagger: 0.05,
     });
   }, []);
@@ -70,7 +70,7 @@ export default function PhilosophySection() {
             
             {/* Extended Animated Pink Trace Line (Adaptive) */}
             <div className="relative h-[2px] w-48 md:w-64 bg-black/10 dark:bg-white/10 overflow-hidden mb-6">
-              <div className="absolute top-0 left-0 h-full w-1/2 bg-gradient-to-r from-transparent via-pink-400 dark:via-pink-200 to-transparent animate-[pan_2s_ease-in-out_infinite]" />
+              <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-pink-300/80 dark:via-pink-300 to-transparent animate-loading-h" />
             </div>
             
             <div className="w-full">
@@ -105,7 +105,7 @@ export default function PhilosophySection() {
         <div className="flex flex-col justify-center text-left gpu-accelerated">
             {/* Extended Animated Pink Trace Line (Adaptive) */}
             <div className="relative h-[2px] w-48 md:w-64 bg-black/10 dark:bg-white/10 overflow-hidden mb-6">
-              <div className="absolute top-0 left-0 h-full w-1/2 bg-gradient-to-r from-transparent via-pink-600 dark:via-pink-200 to-transparent animate-[pan_2s_ease-in-out_infinite]" />
+              <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-pink-300/80 dark:via-pink-300 to-transparent animate-loading-h" />
             </div>
            <div className="max-w-md">
               <p className="text-base md:text-lg leading-snug md:leading-snug text-gray-700 dark:text-gray-400 gpu-accelerated">
