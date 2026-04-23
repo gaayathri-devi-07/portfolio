@@ -85,8 +85,23 @@ body {
 }
 
 ::selection {
-  background: var(--accent);
-  color: var(--bg);
+  background: #fbcfe8;
+  color: #000000;
+}
+
+/* Global Pink Content Animation on Hover */
+a, button, [data-cursor-hover], .magnetic-item, .force-hover {
+  transition: color 0.4s cubic-bezier(0.22, 1, 0.36, 1), 
+              background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+a:hover, button:hover, [data-cursor-hover]:hover, .force-hover {
+  color: #fbcfe8 !important;
+}
+
+.magnetic-item:hover *, .force-hover * {
+  color: #fbcfe8 !important;
 }
 
 /* ─── Typography Utilities ─── */

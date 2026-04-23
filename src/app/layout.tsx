@@ -54,7 +54,7 @@ export const metadata: Metadata = {
 
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { AudioProvider } from "@/components/providers/AudioProvider";
-import Navbar from "@/components/layout/Navbar";
+import MainNavbar from "@/components/layout/MainNavbar";
 import LenisProvider from "@/components/providers/LenisProvider";
 import GlobalScrollTracker from "@/components/layout/GlobalScrollTracker";
 import GrainOverlay from "@/components/ui/GrainOverlay";
@@ -73,14 +73,14 @@ export default function RootLayout({
       style={{ colorScheme: 'dark' }}
       suppressHydrationWarning
     >
-      <body 
+      <body
         className="min-h-full w-full max-w-[100vw] flex flex-col bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500 overflow-x-hidden"
         suppressHydrationWarning
       >
-        <ThemeProvider 
-          attribute="class" 
-          defaultTheme="dark" 
-          forcedTheme="dark" 
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          forcedTheme="dark"
           enableSystem={false}
         >
           <AudioProvider>
@@ -89,7 +89,7 @@ export default function RootLayout({
               <BackgroundParticles />
               <GlobalScrollTracker />
               <GrainOverlay />
-              <Navbar />
+              <MainNavbar />
               {children}
             </LenisProvider>
           </AudioProvider>

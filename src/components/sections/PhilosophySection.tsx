@@ -59,29 +59,10 @@ export default function PhilosophySection() {
 
   return (
     <>
-      {/* 1. THE CINEMATIC OVERLAY - MOVED OUTSIDE TRANSFORM BUBBLE TO ENSURE VIEWPORT CENTERING */}
+      {/* ROGUE LOADER PURGED: Unified loading is now handled exclusively by HeroSection.tsx */}
       <AnimatePresence>
         {!isReady && (
-          <motion.div 
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="fixed inset-0 z-[9999] bg-[#000000]"
-          >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 w-full">
-              <div className="w-48 h-[1px] bg-[#FFB6C1]/10 relative overflow-hidden">
-                <motion.div 
-                  className="absolute top-0 left-0 h-full bg-[#FFB6C1] w-full"
-                  initial={{ x: "-100%" }}
-                  animate={{ x: "100%" }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                />
-              </div>
-              <span className="text-xs md:text-sm font-mono text-[#FFB6C1]/40 tracking-[0.3em] uppercase animate-pulse">
-                Rendering 3D Space
-              </span>
-            </div>
-          </motion.div>
+          <div className="hidden" /> 
         )}
       </AnimatePresence>
 

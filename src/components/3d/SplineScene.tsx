@@ -26,24 +26,12 @@ if (typeof window !== 'undefined') {
 // which was causing the render-blocking bottleneck
 const Spline = dynamic(() => import('@splinetool/react-spline'), {
   ssr: false,
-  loading: () => <SplineLoader />,
 })
 
 interface SplineSceneProps {
   scene: string
   className?: string
   onLoad?: (splineApp: unknown) => void
-}
-
-function SplineLoader() {
-  return (
-    <div className="w-full h-full flex flex-col items-center justify-center bg-[#000000]">
-      <div className="w-16 h-16 rounded-full border-t-2 border-purple-500 animate-spin" />
-      <span className="mt-4 text-xs font-mono text-purple-500/50 tracking-widest uppercase animate-pulse">
-        Initializing 3D Environment...
-      </span>
-    </div>
-  )
 }
 
 export default function SplineScene({ scene, className = '', onLoad }: SplineSceneProps) {

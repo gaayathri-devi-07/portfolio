@@ -71,7 +71,11 @@ export default function VaultSection() {
         {/* Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           {PROJECTS.map((col, i) => (
-            <div key={i} className="vault-card group relative p-10 md:p-14 rounded-[2.5rem] bg-[#0a0a0a]/60 backdrop-blur-xl border border-white/5 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden cursor-pointer flex flex-col justify-between min-h-[350px]">
+            <div 
+              key={i} 
+              className="vault-card group relative p-10 md:p-14 rounded-[2.5rem] bg-[#0a0a0a]/60 backdrop-blur-xl border border-white/5 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden cursor-pointer flex flex-col justify-between min-h-[350px]"
+              data-cursor-hover
+            >
               
               {/* Background Watermark */}
               <div className="absolute -bottom-10 -right-4 text-9xl font-sans font-bold text-white/[0.03] pointer-events-none select-none transition-transform duration-700 group-hover:scale-110">

@@ -50,7 +50,7 @@ const experiences = [
     date: "2025",
     desc: "Engineered scalable relational database structures and optimized SQL query performance for internal platforms. Designed efficient table relationships to streamline data management, significantly improving retrieval latency and ensuring robust backend data integrity.",
     award: null,
-    certificateUrl: "/certificates/respro.pdf",
+    certificateUrl: "/certificates/ResPro.pdf",
   },
   {
     company: "Missile Man Scientific & Research Publications (MMSR)",

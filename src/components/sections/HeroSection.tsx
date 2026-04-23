@@ -89,23 +89,21 @@ export default function HeroSection() {
           <motion.div 
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-            // 'fixed' NOW WORKS CORRECTLY because it's not inside a transformed parent
-            className="fixed inset-0 z-[9999] bg-[#000000]"
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#000000]"
           >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-6 w-full">
-              <span className="text-sm md:text-lg font-mono tracking-[0.5em] text-[#FFB6C1]/80 uppercase animate-pulse">
-                Syncing Neural Engine
-              </span>
-              {/* Perfect Straight Line Loader - Pastel Pink */}
-              <div className="w-48 md:w-64 h-[1px] bg-[#FFB6C1]/10 relative overflow-hidden">
-                <motion.div 
-                  className="absolute top-0 left-0 h-full bg-[#FFB6C1] w-full"
-                  initial={{ x: "-100%" }}
-                  animate={{ x: "100%" }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                />
-              </div>
+            {/* Dynamic Text */}
+            <span className="mb-4 text-xs sm:text-sm font-mono text-[#FFB6C1]/80 tracking-[0.3em] uppercase animate-pulse">
+              Syncing Neural Engine
+            </span>
+            {/* Minimalist Line */}
+            <div className="w-48 h-[1px] bg-[#FFB6C1]/10 relative overflow-hidden">
+              <motion.div 
+                className="absolute top-0 left-0 h-full bg-[#FFB6C1]"
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              />
             </div>
           </motion.div>
         )}
@@ -132,33 +130,41 @@ export default function HeroSection() {
           >
               <h2 
                   suppressHydrationWarning
-                  className="text-xl md:text-2xl lg:text-3xl tracking-[0.4em] text-[#ffffff]/40 mb-4 md:mb-6 font-medium"
+                  className="text-xl md:text-2xl lg:text-3xl tracking-[0.4em] text-[#ffffff]/40 mb-4 md:mb-6 font-medium pointer-events-auto cursor-none"
                   style={{ fontFamily: CANELA }}
+                  data-cursor-hover
               >
                   {helloText}
               </h2>
               <h1 
                   suppressHydrationWarning
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[6rem] font-bold text-[#ffffff] whitespace-nowrap tracking-tight text-center w-full px-4 transition-colors duration-500"
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[6rem] font-bold text-[#ffffff] whitespace-nowrap tracking-tight text-center w-full px-4 transition-colors duration-500 pointer-events-auto cursor-none"
                   style={{ fontFamily: CANELA }}
+                  data-cursor-hover
               >
                   {nameText}
               </h1>
           </motion.div>
 
-          {/* LAYER 2: 3D MODEL CORRIDOR (LIGHTNING SPRING ENTRANCE) */}
+          {/* THE LIGHTNING ENTRANCE: Shorter travel distance (y: 50), extreme spring stiffness */}
           <motion.div 
-              initial={{ y: "20vh", opacity: 0, scale: 0.95 }}
-              animate={isRobotLoaded ? { y: 0, opacity: 1, scale: 1 } : { y: "20vh", opacity: 0, scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 350, damping: 25, mass: 0.5 }}
-              className="absolute inset-0 w-full h-screen flex items-center justify-center z-0 pointer-events-auto gpu-accelerated"
+              initial={{ y: 50, opacity: 0, scale: 0.98 }}
+              animate={isRobotLoaded ? { y: 0, opacity: 1, scale: 1 } : { y: 50, opacity: 0, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25, mass: 0.5 }}
+              className="absolute inset-0 w-full h-screen flex items-center justify-center z-0 pointer-events-none gpu-accelerated"
           >
               <div className="relative w-full max-w-[1400px] h-full flex items-center justify-center pointer-events-auto overflow-hidden">
                   <Suspense fallback={null}>
                     <SplineScene 
                         scene="https://prod.spline.design/IYhNPPRr0afNe8vH/scene.splinecode" 
                         className="w-full h-full" 
-                        onLoad={() => setIsRobotLoaded(true)}
+                        onLoad={() => {
+                          // THE GPU BUFFER: Gives the graphics card 500ms to compile shaders in the background 
+                          // before dropping the pink infinity loader.
+                          setTimeout(() => {
+                            setIsRobotLoaded(true);
+                          }, 500);
+                        }} 
                     />
                   </Suspense>
                   

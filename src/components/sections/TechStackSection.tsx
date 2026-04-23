@@ -180,7 +180,10 @@ export default function TechStackSection() {
                             className="flex flex-col items-center gap-3 w-full group"
                           >
                             {/* Glass Icon Container */}
-                            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg group-hover:bg-gradient-to-br group-hover:from-pink-500/20 group-hover:to-purple-500/20 group-hover:border-pink-300/50 transition-all duration-300">
+                            <div 
+                              className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg group-hover:bg-gradient-to-br group-hover:from-pink-500/20 group-hover:to-purple-500/20 group-hover:border-pink-300/50 transition-all duration-300"
+                              data-cursor-hover
+                            >
                               <tech.icon className="text-4xl text-pink-200 drop-shadow-[0_0_12px_rgba(251,207,232,0.4)] group-hover:text-purple-300 transition-all duration-300" />
                             </div>
                             <span className="text-[10px] text-pink-100/70 font-mono text-center tracking-widest uppercase group-hover:text-purple-200 transition-colors duration-300">
