@@ -78,7 +78,7 @@ export default function PhilosophySection() {
                 <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-pink-300 to-transparent animate-loading-h" />
               </div>
               <div className="w-full">
-                <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 break-words leading-tight">
+                <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight">
                   <span className="text-pink-200">Welcome</span> <br />
                   to my space.
                 </h2>
