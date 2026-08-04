@@ -1,22 +1,14 @@
 "use client";
 
-import { useEffect, useState, useRef, Suspense } from "react";
-import SplineScene from "@/components/3d/SplineScene";
+import { useEffect, useState, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, useSpring } from "framer-motion";
+import ScrambleText from "@/components/ui/ScrambleText";
+import TypewriterSubheading from "@/components/ui/TypewriterSubheading";
 
 const CANELA = "Canela, Playfair Display, Georgia, serif";
-const JAPANESE_CHARS = "ハローワールド私はガヤトリデヴィですケコサシスセソタチツテト";
-
-type SequencePhase = "loading" | "entering" | "japanese" | "paused" | "translating" | "completed";
 
 export default function HeroSection() {
-  const [isRobotLoaded, setIsRobotLoaded] = useState(false);
-  const [phase, setPhase] = useState<SequencePhase>("loading");
-  
-  // Text states for the transition
-  const [helloText, setHelloText] = useState("ハロー・ワールド");
-  const [nameText, setNameText] = useState("私はガヤトリ・デヴィです");
-  
+  const [showLanding, setShowLanding] = useState(false);
   const containerRef = useRef<HTMLElement>(null);
 
   const { scrollY } = useScroll();
@@ -27,76 +19,28 @@ export default function HeroSection() {
   // Fades out between 0px and 800px of scroll depth
   const sectionOpacity = useTransform(smoothY, [0, 800], [1, 0]);
   // Adds a slight downward parallax shift
-  const sectionY = useTransform(smoothY, [0, 800], [0, 150]); 
+  const sectionY = useTransform(smoothY, [0, 800], [0, 150]);
 
-  // SEQUENCE ORCHESTRATION
+  // Auto-dismiss loading overlay after assets are ready
   useEffect(() => {
-    if (!isRobotLoaded) return;
-
-    // Start Sequence
-    setPhase("entering");
-
-    const timer1 = setTimeout(() => {
-      setPhase("japanese");
-    }, 500);
-
-    const timer2 = setTimeout(() => {
-      setPhase("paused");
-    }, 1000);
-
-    const timer3 = setTimeout(() => {
-      setPhase("translating");
-    }, 2200);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-    };
-  }, [isRobotLoaded]);
-
-  // SCRAMBLE LOGIC
-  useEffect(() => {
-    if (phase !== "translating") return;
-
-    const scramble = (targetWord: string, setTarget: (val: string) => void, duration: number) => {
-      let iterations = 0;
-      const interval = setInterval(() => {
-        setTarget(
-          targetWord.split("").map((letter, index) => {
-            if (index < iterations) return targetWord[index];
-            return JAPANESE_CHARS[Math.floor(Math.random() * JAPANESE_CHARS.length)];
-          }).join("")
-        );
-        
-        if (iterations >= targetWord.length) {
-          clearInterval(interval);
-          setPhase("completed");
-        }
-        iterations += 1;
-      }, duration / targetWord.length);
-    };
-
-    scramble("HELLO WORLD", setHelloText, 800);
-    scramble("I AM GAAYATHRI DEVI", setNameText, 1000);
-  }, [phase]);
+    const t = window.setTimeout(() => setShowLanding(true), 900);
+    return () => window.clearTimeout(t);
+  }, []);
 
   return (
     <>
-      {/* 1. THE CINEMATIC OVERLAY - MOVED OUTSIDE OF SECTION TO ESCAPE TRANSFORM BUBBLE */}
+      {/* 1. THE CINEMATIC OVERLAY */}
       <AnimatePresence>
-        {!isRobotLoaded && (
+        {!showLanding && (
           <motion.div 
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
             className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#000000]"
           >
-            {/* Dynamic Text */}
             <span className="mb-4 text-xs sm:text-sm font-mono text-[#FFB6C1]/80 tracking-[0.3em] uppercase animate-pulse">
               Syncing Neural Engine
             </span>
-            {/* Minimalist Line */}
             <div className="w-48 h-[1px] bg-[#FFB6C1]/10 relative overflow-hidden">
               <motion.div 
                 className="absolute top-0 left-0 h-full bg-[#FFB6C1]"
@@ -120,63 +64,55 @@ export default function HeroSection() {
         >
           
           {/* CINEMATIC TEXT LAYER */}
-          <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ 
-                opacity: phase === "loading" ? 0 : 1,
-                transition: { duration: 0.5, delay: 0.5 }
-              }}
-              className="absolute inset-0 w-full h-screen flex flex-col items-center justify-center z-10 pointer-events-none px-4 gpu-accelerated"
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{
+              opacity: showLanding ? 1 : 0,
+              y: showLanding ? 0 : 8,
+              transition: { duration: 0.4, ease: "easeOut", delay: 0.05 },
+            }}
+            className="absolute inset-0 w-full h-screen flex flex-col items-center justify-center z-10 pointer-events-none pl-10 sm:pl-16 md:pl-24 lg:pl-32 pr-6 gpu-accelerated"
           >
-              <h2 
-                  suppressHydrationWarning
-                  className="text-xl md:text-2xl lg:text-3xl tracking-[0.4em] text-[#ffffff]/40 mb-4 md:mb-6 font-medium pointer-events-auto cursor-none"
-                  style={{ fontFamily: CANELA }}
-                  data-cursor-hover
-              >
-                  {helloText}
-              </h2>
-              <h1 
-                  suppressHydrationWarning
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[6rem] font-bold text-[#ffffff] whitespace-nowrap tracking-tight text-center w-full px-4 transition-colors duration-500 pointer-events-auto cursor-none"
-                  style={{ fontFamily: CANELA }}
-                  data-cursor-hover
-              >
-                  {nameText}
-              </h1>
+            <h2
+              suppressHydrationWarning
+              className="text-xl md:text-2xl lg:text-3xl tracking-[0.4em] text-[#ffffff]/40 mb-4 md:mb-6 font-medium pointer-events-auto cursor-none"
+              style={{ fontFamily: CANELA }}
+              data-cursor-hover
+            >
+              <ScrambleText
+                fromText="ハロー・ワールド"
+                toText="HELLO WORLD"
+                trigger={showLanding}
+                cyclesPerChar={5}
+              />
+            </h2>
+            <h1
+              suppressHydrationWarning
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[6rem] font-bold text-[#ffffff] whitespace-nowrap tracking-tight text-center w-full px-4 transition-colors duration-500 pointer-events-auto cursor-none"
+              style={{ fontFamily: CANELA }}
+              data-cursor-hover
+            >
+              <ScrambleText
+                fromText="私はガヤトリ・デヴィです"
+                toText="I AM GAAYATHRI DEVI"
+                trigger={showLanding}
+                cyclesPerChar={5}
+              />
+            </h1>
+            <p
+              className="text-[11px] md:text-[12px] font-mono tracking-[0.15em] text-[#ffffff]/50 uppercase mt-6 pointer-events-auto"
+            >
+              I AM{" "}
+              <TypewriterSubheading />
+            </p>
           </motion.div>
 
-          {/* THE LIGHTNING ENTRANCE: Shorter travel distance (y: 50), extreme spring stiffness */}
-          <motion.div 
-              initial={{ y: 50, opacity: 0, scale: 0.98 }}
-              animate={isRobotLoaded ? { y: 0, opacity: 1, scale: 1 } : { y: 50, opacity: 0, scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25, mass: 0.5 }}
-              className="absolute inset-0 w-full h-screen flex items-center justify-center z-0 pointer-events-none gpu-accelerated"
-          >
-              <div className="relative w-full max-w-[1400px] h-full flex items-center justify-center pointer-events-auto overflow-hidden">
-                  <Suspense fallback={null}>
-                    <SplineScene 
-                        scene="https://prod.spline.design/IYhNPPRr0afNe8vH/scene.splinecode" 
-                        className="w-full h-full" 
-                        onLoad={() => {
-                          // THE GPU BUFFER: Gives the graphics card 500ms to compile shaders in the background 
-                          // before dropping the pink infinity loader.
-                          setTimeout(() => {
-                            setIsRobotLoaded(true);
-                          }, 500);
-                        }} 
-                    />
-                  </Suspense>
-                  
-                  {/* OBLITERATION MASK */}
-                  <div className="absolute bottom-0 right-0 w-[250px] h-[120px] bg-[#000000] z-[9999] pointer-events-none" />
-              </div>
-          </motion.div>
+
 
           {/* Cinematic Scroll Indicator */}
           <motion.div 
             initial={{ opacity: 0 }}
-            animate={{ opacity: phase === "completed" ? 0.4 : 0 }}
+            animate={{ opacity: showLanding ? 0.4 : 0 }}
             transition={{ duration: 1 }}
             className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 z-50 pointer-events-none"
           >

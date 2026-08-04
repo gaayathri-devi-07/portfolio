@@ -60,6 +60,8 @@ import GlobalScrollTracker from "@/components/layout/GlobalScrollTracker";
 import GrainOverlay from "@/components/ui/GrainOverlay";
 import CustomCursor from "@/components/ui/CustomCursor";
 import BackgroundParticles from "@/components/3d/BackgroundParticles";
+import LoaderPage from "@/components/layout/LoaderPage";
+import TabTitleChanger from "@/components/layout/TabTitleChanger";
 
 export default function RootLayout({
   children,
@@ -73,6 +75,10 @@ export default function RootLayout({
       style={{ colorScheme: 'dark' }}
       suppressHydrationWarning
     >
+      <head>
+        <link rel="preconnect" href="https://prod.spline.design" />
+        <link rel="dns-prefetch" href="https://prod.spline.design" />
+      </head>
       <body
         className="min-h-full w-full max-w-[100vw] flex flex-col bg-[var(--bg)] text-[var(--fg)] transition-colors duration-500 overflow-x-hidden"
         suppressHydrationWarning
@@ -85,12 +91,15 @@ export default function RootLayout({
         >
           <AudioProvider>
             <LenisProvider>
+              <TabTitleChanger />
               <CustomCursor />
               <BackgroundParticles />
               <GlobalScrollTracker />
               <GrainOverlay />
               <MainNavbar />
-              {children}
+              <LoaderPage>
+                {children}
+              </LoaderPage>
             </LenisProvider>
           </AudioProvider>
         </ThemeProvider>

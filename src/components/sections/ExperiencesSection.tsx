@@ -1,47 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const CERIF = "Canela, Playfair Display, Georgia, serif";
-
-function SpiderReveal({ text, className }: { text: string; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!ref.current) return;
-    const words = ref.current.querySelectorAll(".sr-word");
-    gsap.from(words, {
-      scrollTrigger: { 
-        trigger: ref.current, 
-        start: "top 85%",
-        toggleActions: "play reverse play reverse"
-      },
-      y: "100%",
-      rotate: 15,
-      opacity: 0,
-      duration: 1,
-      ease: "expo.out",
-      stagger: 0.05,
-    });
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={`flex flex-wrap justify-center gap-x-2 gap-y-1 ${className ?? ""}`}
-    >
-      {text.split(" ").map((w, i) => (
-        <span key={i} className="overflow-hidden inline-block py-1">
-          <span className="sr-word inline-block">{w}</span>
-        </span>
-      ))}
-    </div>
-  );
-}
 
 const experiences = [
   {
@@ -125,7 +86,7 @@ function ExperienceCard({ exp, index, setActiveDate }: { exp: any, index: number
               </div>
 
               {/* Company Title (Hardcoded White) */}
-              <h3 className="w-full text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-2 text-[#ffffff] group-hover:text-pink-300 transition-colors">
+              <h3 className="w-full text-xl md:text-2xl font-bold leading-tight mb-2 text-[#ffffff] group-hover:text-pink-300 transition-colors">
                 {exp.company}
               </h3>
               
@@ -154,6 +115,7 @@ function ExperienceCard({ exp, index, setActiveDate }: { exp: any, index: number
 export default function ExperiencesSection() {
   const [activeDate, setActiveDate] = useState(experiences[0].date);
   const containerRef = useRef(null);
+  const headingRef = useRef<HTMLSpanElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start center", "end center"]
@@ -161,8 +123,24 @@ export default function ExperiencesSection() {
 
   const scrollHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
+  // Scroll-triggered typewriter: animate when heading enters viewport
+  useEffect(() => {
+    const el = headingRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add('animate-typewriter');
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id="experience" ref={containerRef} className="relative z-30 w-full bg-[#000000] pt-2 pb-24 px-12 md:px-24 lg:px-32 transition-colors duration-500 transform-gpu will-change-transform contain-paint" style={{ fontFamily: CERIF, clipPath: 'inset(0)' }}>
+    <section id="experience" ref={containerRef} className="relative z-30 w-full bg-[#000000] pt-2 pb-24 px-12 md:px-24 lg:px-32 transition-colors duration-500 transform-gpu will-change-transform contain-paint" style={{ fontFamily: CERIF }}>
       
       {/* THE UNIFIED MASTER CONTAINER: Centered and responsive */}
       <div className="relative w-full max-w-[1400px] mx-auto flex gap-4 md:gap-12">
@@ -199,12 +177,17 @@ export default function ExperiencesSection() {
 
         {/* COLUMN 2: SECTION CONTENT (Centered relative to the timeline unit) */}
         <div className="flex-1 flex flex-col items-center">
-          {/* TITLE WRAPPER — Spider Reveal with Massive Clearance */}
-          <div className="relative z-20 text-center w-full mb-32 md:mb-48">
-            <SpiderReveal 
-              text="MY EXPERIENCES"
-              className="text-6xl md:text-8xl font-bold uppercase tracking-tighter text-center text-[#ffffff] opacity-80"
-            />
+          <div
+            className="relative z-20 text-center w-full py-16 md:py-20"
+            style={{ fontFamily: CERIF }}
+          >
+            <span
+              ref={headingRef}
+              className="scroll-type-heading"
+              style={{ fontSize: 'clamp(2rem, 4.5vw, 4rem)', fontWeight: 700, lineHeight: 1.1, color: '#FFFFFF' }}
+            >
+              MY EXPERIENCES
+            </span>
           </div>
 
           {/* CARD CONTAINER — Perfectly centered within its flex column */}

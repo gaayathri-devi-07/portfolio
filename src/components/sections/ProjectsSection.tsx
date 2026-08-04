@@ -1,58 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { motion, useMotionValue, useSpring, useScroll, useTransform } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import RevealText from "@/components/ui/RevealText";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const CERIF = "Canela, Playfair Display, Georgia, serif";
 
-function SpiderReveal({ text, className }: { text: string; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!ref.current) return;
-    const words = ref.current.querySelectorAll(".sr-word");
-    gsap.from(words, {
-      scrollTrigger: { 
-        trigger: ref.current, 
-        start: "top 80%",
-        toggleActions: "play reverse play reverse"
-      },
-      y: "100%",
-      opacity: 0,
-      rotate: 15,
-      duration: 1.5,
-      ease: "expo.out",
-      stagger: 0.02,
-    });
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={`flex flex-wrap justify-center gap-x-4 gap-y-1 ${className ?? ""}`}
-      style={{ fontFamily: CERIF }}
-    >
-      {text.split(" ").map((w, i) => (
-        <span key={i} className="overflow-hidden inline-block py-1">
-          <span className="sr-word inline-block">{w}</span>
-        </span>
-      ))}
-    </div>
-  );
-}
-
 export default function ProjectsSection() {
   const [isHovered, setIsHovered] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLSpanElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const springX = useSpring(mouseX, { stiffness: 150, damping: 15, mass: 0.5 });
-  const springY = useSpring(mouseY, { stiffness: 150, damping: 15, mass: 0.5 });
+  const springX = useSpring(mouseX, { stiffness: 300, damping: 20, mass: 0.15 });
+  const springY = useSpring(mouseY, { stiffness: 300, damping: 20, mass: 0.15 });
 
   // SCROLL-TRACKING 3D ROTATION
   const { scrollYProgress } = useScroll({
@@ -64,17 +29,36 @@ export default function ProjectsSection() {
   useEffect(() => {
     const handleScroll = () => setIsHovered(false);
     window.addEventListener("scroll", handleScroll, { passive: true });
+    ScrollTrigger.refresh();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Scroll-triggered typewriter: animate when heading enters viewport
+  useEffect(() => {
+    const el = headingRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add('animate-typewriter');
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   // Enters showing the back (-180), lays PERFECTLY FLAT to read in the center (0), flips to the back as it leaves (180). Total rotation = 360 degrees.
-  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [-180, 0, 180]);
+  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [-450, 0, 450]);
   // Scales down slightly while flipping to add depth and prevent screen clipping, full size in the center
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
 
   function handleMouseMove(e: React.MouseEvent) {
-    mouseX.set(e.clientX);
-    mouseY.set(e.clientY);
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    mouseX.set(cx + (e.clientX - cx) * 2.5);
+    mouseY.set(cy + (e.clientY - cy) * 2.5);
   }
 
   return (
@@ -82,16 +66,21 @@ export default function ProjectsSection() {
       <section 
         id="projects"
         ref={sectionRef}
-        className="relative z-20 w-full min-h-screen bg-[#000000] pt-2 pb-24 md:pb-32 flex flex-col items-center overflow-hidden transform-gpu will-change-transform contain-paint px-12 md:px-24 lg:px-32" 
+        className="relative z-20 w-screen min-h-dvh bg-[#000000] pt-2 pb-24 md:pb-32 flex flex-col items-center overflow-visible transform-gpu will-change-transform contain-paint px-12 md:px-24 lg:px-32" 
       >
         <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center">
           
-          {/* TITLE WRAPPER — Spider Reveal with Massive Clearance */}
-          <div className="relative z-20 text-center w-full mb-32 md:mb-48">
-            <SpiderReveal
-              text="MY PROJECTS"
-              className="text-6xl md:text-8xl font-bold uppercase tracking-tighter text-center relative z-20 w-full justify-center text-[#ffffff] opacity-80"
-            />
+          <div
+            className="relative z-30 text-center w-full py-16 md:py-20"
+            style={{ fontFamily: CERIF }}
+          >
+            <span
+              ref={headingRef}
+              className="scroll-type-heading"
+              style={{ fontSize: 'clamp(2rem, 4.5vw, 4rem)', fontWeight: 700, lineHeight: 1.1, color: '#FFFFFF' }}
+            >
+              MY PROJECT
+            </span>
           </div>
 
           <motion.div 
@@ -120,9 +109,9 @@ export default function ProjectsSection() {
                             Black Box <br/> AI Interview App
                         </h3>
                         
-                        <p className="text-base md:text-lg leading-relaxed text-gray-300 max-w-3xl mx-auto mb-12">
+                        <RevealText as="p" className="text-base md:text-lg leading-relaxed text-gray-300 max-w-3xl mx-auto mb-12">
                             While countless platforms teach coding, there is a massive gap in solutions that simulate the intense pressure of a real technical interview. Blackbox AI bridges this gap by providing an immersive, real-time mock interview environment tailored to specific target companies and difficulty levels. It is designed to give candidates firsthand experience, helping them conquer interview anxiety and perform with absolute confidence.
-                        </p>
+                        </RevealText>
                     </div>
 
                     {/* --- TECH STACK --- */}

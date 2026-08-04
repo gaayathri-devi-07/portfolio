@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 import { motion } from "framer-motion";
+import RevealText from "@/components/ui/RevealText";
 import { 
   SiNextdotjs, SiReact, SiTypescript, SiTailwindcss, 
   SiThreedotjs, SiFramer, SiGreensock, SiPython, 
@@ -55,63 +53,58 @@ const skillCategories = [
   }
 ];
 
-function SpiderReveal({ text, className }: { text: string; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!ref.current) return;
-    const words = ref.current.querySelectorAll(".sr-word");
-    gsap.from(words, {
-      scrollTrigger: { 
-        trigger: ref.current, 
-        start: "top 95%",
-        toggleActions: "play reverse play reverse"
-      },
-      y: "100%", rotate: 15, opacity: 0,
-      duration: 1.5, ease: "expo.out", stagger: 0.1,
-    });
-  }, []);
-  return (
-    <div ref={ref} className={`flex flex-wrap justify-center gap-x-4 gap-y-1 ${className ?? ""}`} style={{ fontFamily: CHRONIC }}>
-      {text.split(" ").map((w, i) => (
-        <span key={i} className="overflow-hidden inline-block py-1">
-          <span className="sr-word inline-block">{w}</span>
-        </span>
-      ))}
-    </div>
-  );
-}
-
 export default function TechStackSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % skillCategories.length);
-    }, 1000); // Rapid, high-speed motor
+    }, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Scroll-triggered typewriter: animate when heading enters viewport
+  useEffect(() => {
+    const el = headingRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add('animate-typewriter');
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
   return (
     <>
-      {/* THE INVISIBLE WALL: Reduced spacing to pull section higher */}
       <div className="w-full h-[20vh] pointer-events-none" />
 
       <section
         id="skills"
         ref={sectionRef}
-        className="relative z-40 w-full min-h-[130vh] flex flex-col items-center pt-0 pb-[80vh] transition-colors duration-500 overflow-hidden bg-[#000000] transform-gpu will-change-transform"
+        className="relative z-40 w-full min-h-[130vh] flex flex-col items-center pt-0 pb-[80vh] transition-colors duration-500 overflow-hidden bg-[#000000] transform-gpu will-change-transform px-6 md:px-12 lg:px-16"
       >
-        {/* 2. The Title Wrapper - Brute force negative margin for absolute peak placement */}
-        <div className="relative z-50 text-center w-full mb-40 md:mb-52 -mt-56">
-          <SpiderReveal
-            text="SKILLS"
-            className="text-6xl md:text-8xl font-bold uppercase tracking-tighter text-center text-[#ffffff] opacity-90"
-          />
+        <div
+          className="relative z-50 text-center w-full py-16 md:py-20"
+          style={{ fontFamily: CHRONIC }}
+        >
+          <span
+            ref={headingRef}
+            className="scroll-type-heading"
+            style={{ fontSize: 'clamp(2rem, 4.5vw, 4rem)', fontWeight: 700, lineHeight: 1.1, color: '#FFFFFF' }}
+          >
+              MY SKILLS
+          </span>
         </div>
 
         {/* 3. The 3D Rotating Stack: Calibrated height lift */}
-        <div className="relative w-full max-w-[1400px] mx-auto flex-1 flex justify-center items-center px-4 transform-gpu translate-y-32 z-10 [perspective:1200px]">
+        <div className="relative w-full max-w-[1400px] mx-auto flex-1 flex justify-center items-center px-4 transform-gpu translate-y-12 z-10 [perspective:1200px]">
             {/* HYBRID STAGE: Dark backdrop to preserve 3D lighting in Light Mode */}
             <div className="absolute inset-x-[-10vw] inset-y-[-5vh] bg-black/10 dark:bg-transparent rounded-full blur-3xl pointer-events-none" />
             
@@ -164,9 +157,9 @@ export default function TechStackSection() {
                       <h3 className="text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-br from-pink-200 to-purple-300 text-center uppercase">
                         {category.title}
                       </h3>
-                      <p className="text-gray-400 text-[11px] md:text-xs text-center font-mono leading-relaxed px-2">
+                      <RevealText as="p" className="text-gray-400 text-[11px] md:text-xs text-center font-mono leading-relaxed px-2">
                         {category.description}
-                      </p>
+                      </RevealText>
                       {/* Subtle divider line */}
                       <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-pink-300/50 to-transparent mt-2" />
                     </div>

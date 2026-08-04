@@ -33,13 +33,24 @@ export default function MagneticText({
       quickRotate.current = gsap.quickTo(el, 'rotation', { duration: 0.6, ease: 'power3.out' })
     }
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect()
-      const centerX = rect.left + rect.width / 2
-      const centerY = rect.top + rect.height / 2
+    // ─── Cached rect — eliminates getBoundingClientRect() from the hot path ───
+    // Calling getBoundingClientRect inside mousemove triggers a synchronous
+    // layout reflow on every event. We cache it once and refresh on resize.
+    let cachedRect = el.getBoundingClientRect()
+    const resizeObserver = new ResizeObserver(() => {
+      cachedRect = el.getBoundingClientRect()
+    })
+    resizeObserver.observe(el)
 
-      const deltaX = (e.clientX - centerX) / rect.width
-      const deltaY = (e.clientY - centerY) / rect.height
+    // ─── rAF-gated mousemove — prevents event accumulation ────────────────────
+    let rafId: number | null = null
+    let latestClientX = 0
+    let latestClientY = 0
+
+    const applyMagnetic = () => {
+      rafId = null
+      const deltaX = (latestClientX - (cachedRect.left + cachedRect.width / 2)) / cachedRect.width
+      const deltaY = (latestClientY - (cachedRect.top + cachedRect.height / 2)) / cachedRect.height
 
       quickX.current?.(deltaX * strength)
       quickY.current?.(deltaY * strength)
@@ -48,7 +59,19 @@ export default function MagneticText({
       }
     }
 
+    const handleMouseMove = (e: MouseEvent) => {
+      latestClientX = e.clientX
+      latestClientY = e.clientY
+      if (rafId === null) {
+        rafId = requestAnimationFrame(applyMagnetic)
+      }
+    }
+
     const handleMouseLeave = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId)
+        rafId = null
+      }
       quickX.current?.(0)
       quickY.current?.(0)
       if (rotate) {
@@ -56,12 +79,15 @@ export default function MagneticText({
       }
     }
 
-    el.addEventListener('mousemove', handleMouseMove)
-    el.addEventListener('mouseleave', handleMouseLeave)
+    // passive: true — guaranteed no scroll blocking
+    el.addEventListener('mousemove', handleMouseMove, { passive: true })
+    el.addEventListener('mouseleave', handleMouseLeave, { passive: true })
 
     return () => {
       el.removeEventListener('mousemove', handleMouseMove)
       el.removeEventListener('mouseleave', handleMouseLeave)
+      resizeObserver.disconnect()
+      if (rafId !== null) cancelAnimationFrame(rafId)
     }
   }, [strength, rotate])
 

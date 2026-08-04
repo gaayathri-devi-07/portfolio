@@ -1,5 +1,7 @@
 "use client";
 
+import RevealText from "@/components/ui/RevealText";
+
 export default function EngineeringSection() {
   return (
     <section className="relative w-full pt-10 md:pt-16 pb-32 px-12 md:px-24 lg:px-32 bg-[#000000] transition-colors duration-500 overflow-hidden transform-gpu will-change-transform contain-paint">
@@ -15,9 +17,9 @@ export default function EngineeringSection() {
           <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-[#ffffff]">
             Technical Horsepower.
           </h2>
-          <p className="text-gray-400 max-w-2xl text-xl font-light leading-relaxed mx-auto">
+          <RevealText as="p" className="text-gray-400 max-w-2xl text-xl font-light leading-relaxed mx-auto">
             Built for scale, engineered for FAANG standards. Demonstrating end-to-end command over modern architectures and heavy computational logic.
-          </p>
+          </RevealText>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -32,9 +34,9 @@ export default function EngineeringSection() {
               </svg>
             </div>
             <h3 className="text-2xl font-bold tracking-tight text-[#ffffff] mb-4">High-Performance WebGL</h3>
-            <p className="text-gray-400 font-light leading-relaxed text-lg">
+            <RevealText as="p" className="text-gray-400 font-light leading-relaxed text-lg">
               Architectured the <strong className="text-[#ffffff] font-medium">&quot;Lucid Void&quot;</strong> project, pushing browser limits to render over <strong className="text-[#ffffff]">60,000+ physics particles</strong> flawlessly at a stable 60fps.
-            </p>
+            </RevealText>
           </div>
 
           {/* Card 2 */}
@@ -48,9 +50,9 @@ export default function EngineeringSection() {
               </svg>
             </div>
             <h3 className="text-2xl font-bold tracking-tight text-[#ffffff] mb-4">Product Architecture</h3>
-            <p className="text-gray-400 font-light leading-relaxed text-lg">
+            <RevealText as="p" className="text-gray-400 font-light leading-relaxed text-lg">
               Led system design and full-stack implementation for the <strong className="text-[#ffffff] font-medium">&quot;AI Study Planner&quot;</strong>. Organized complex relational databases and optimized API routing for seamless UX.
-            </p>
+            </RevealText>
           </div>
 
           {/* Card 3 */}
@@ -64,9 +66,9 @@ export default function EngineeringSection() {
               </svg>
             </div>
             <h3 className="text-2xl font-bold tracking-tight text-[#ffffff] mb-4">Algorithmic Efficiency</h3>
-            <p className="text-gray-400 font-light leading-relaxed text-lg">
+            <RevealText as="p" className="text-gray-400 font-light leading-relaxed text-lg">
               Deep expertise in core data structures and complex algorithm optimization. Reducing computational complexity and memory allocation overhead.
-            </p>
+            </RevealText>
           </div>
         </div>
       </div>

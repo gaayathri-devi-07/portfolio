@@ -128,51 +128,6 @@ a:hover, button:hover, [data-cursor-hover]:hover, .force-hover {
   border: 1px solid var(--glass-border);
 }
 
-/* ─── Custom Cursor ─── */
-.cursor-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: difference;
-  transition: width 0.3s, height 0.3s, margin 0.3s;
-}
-
-.cursor-ring {
-  width: 40px;
-  height: 40px;
-  border: 1.5px solid var(--accent);
-  border-radius: 50%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 9998;
-  opacity: 0.5;
-  transition: width 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28),
-    height 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28),
-    margin 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28),
-    opacity 0.3s;
-}
-
-.cursor-expanded .cursor-dot {
-  width: 0px;
-  height: 0px;
-}
-
-.cursor-expanded .cursor-ring {
-  width: 80px;
-  height: 80px;
-  margin: -40px 0 0 -40px;
-  opacity: 0.3;
-  border-width: 2px;
-}
-
 /* ─── Animations ─── */
 @keyframes float {
 
@@ -310,9 +265,7 @@ div[id*="spline-watermark"] {
 
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
-
-  .cursor-dot,
-  .cursor-ring {
+  .custom-cursor-container {
     display: none !important;
   }
 }
@@ -335,6 +288,18 @@ div[id*="spline-watermark"] {
   background: var(--accent);
 }
 
+/* ─── Typewriter Cursor ─── */
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.typewriter-cursor {
+  animation: blink-cursor 0.5s step-end infinite;
+  font-weight: 100;
+  color: #fbcfe8;
+  margin-left: 2px;
+}
+
 /* ─── Hide Spline Logo (Aggressive Failsafe) ─── */
 #spline-watermark, 
 a[href*="spline.design"],
@@ -349,9 +314,112 @@ a[href*="spline.design"],
 div:has(> a[href*="spline.design"]) { display: none !important; opacity: 0 !important; pointer-events: none !important; }
 
 
+/* ─── Scroll-Triggered Typewriter for Section Headings ─── */
+@keyframes typing {
+  from { max-width: 0; }
+  to { max-width: 20ch; }
+}
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: #FF79C6; }
+}
+.scroll-type-heading {
+  border-right: 3px solid #FF79C6;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 0;
+  display: inline-block;
+  vertical-align: top;
+}
+.scroll-type-heading.animate-typewriter {
+  animation: typing 2s steps(15, end) forwards, blink-caret 0.75s step-end infinite;
+}
+
+/* ─── Contact Heading Slide-In Animations ─── */
+@keyframes explosiveSlideLeft {
+  0% {
+    transform: translateX(-100vw) scale(0.6) skewX(20deg);
+    opacity: 0;
+    filter: blur(12px);
+  }
+  70% {
+    transform: translateX(30px) scale(1.05) skewX(-5deg);
+    opacity: 0.9;
+    filter: blur(2px);
+  }
+  100% {
+    transform: translateX(0) scale(1) skewX(0deg);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes explosiveSlideRight {
+  0% {
+    transform: translateX(100vw) scale(0.6) skewX(-20deg);
+    opacity: 0;
+    filter: blur(12px);
+  }
+  70% {
+    transform: translateX(-30px) scale(1.05) skewX(5deg);
+    opacity: 0.9;
+    filter: blur(2px);
+  }
+  100% {
+    transform: translateX(0) scale(1) skewX(0deg);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+.contact-heading .slide-left {
+  transform: translateX(-100vw) scale(0.6) skewX(20deg);
+  opacity: 0;
+}
+.contact-heading .slide-right {
+  transform: translateX(100vw) scale(0.6) skewX(-20deg);
+  opacity: 0;
+}
+.contact-heading.animate-reveal .slide-left {
+  animation: explosiveSlideLeft 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.contact-heading.animate-reveal .slide-right {
+  animation: explosiveSlideRight 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Explosive slide utility classes */
+.animate-slide-left {
+  animation: explosiveSlideLeft 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.animate-slide-right {
+  animation: explosiveSlideRight 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ─── Scroll Reveal Text Blocks ─── */
+.reveal-text-block {
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: transform, opacity;
+  transition: transform 1.2s cubic-bezier(0.215, 0.610, 0.355, 1),
+              opacity 1.2s cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+.reveal-text-block.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ─── GPU Acceleration ─── */
 .gpu-accelerated {
   will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Composite layer promotion for scroll-heavy containers */
+.contain-paint {
+  contain: paint style layout;
+  content-visibility: auto;
 }
 
 @keyframes loadingBarHorizontal { 
@@ -387,9 +455,16 @@ div:has(> a[href*="spline.design"]) { display: none !important; opacity: 0 !impo
   cursor: none !important;
 }
 
+html, body {
+  cursor: none !important;
+}
+
 /* Ensure the custom cursor itself never blocks clicks */
 #custom-cursor {
   pointer-events: none !important;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
 /* ELITE OVERRIDE: Permanently kill Spline Watermark at all zoom levels */
@@ -400,4 +475,17 @@ a[href*="spline.design"],
   opacity: 0 !important;
   pointer-events: none !important;
   visibility: hidden !important;
+}
+
+/* Physical black mask that sits at the bottom-right of every Spline
+   canvas to physically cover the built-in Spline logo. */
+.spline-logo-mask {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 220px !important;
+  height: 65px !important;
+  background-color: #000000 !important;
+  z-index: 50 !important;
+  pointer-events: none !important;
 }

@@ -8,7 +8,7 @@ import FloatingNav from "@/components/layout/FloatingNav";
 
 export default function Home() {
   return (
-    <main className="relative w-full bg-[#000000] transition-colors duration-500">
+    <main className="relative w-full bg-[#000000] transition-colors duration-500 gpu-accelerated contain-paint">
       <section id="home">
         <HeroSection />
       </section>
